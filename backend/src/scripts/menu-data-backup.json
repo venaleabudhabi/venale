@@ -1,0 +1,211 @@
+{
+  "venue": {
+    "slug": "revive-refuel-venale",
+    "name_en": "REVIVE Refuel - VENALE",
+    "name_ar": "",
+    "currency": "AED",
+    "languages": ["en", "ar"],
+    "payment_methods": ["COD", "CARD"],
+    "delivery_enabled": false,
+    "member_discount_percent": 15,
+    "member_discount_note_en": "Exclusive 15% discount for Revive members.",
+    "member_discount_note_ar": "",
+    "loyalty_note_en": "Revive members who visit our shop can get a loyalty card.",
+    "loyalty_note_ar": ""
+  },
+  "addon_groups": [
+    {
+      "key": "toppings",
+      "name_en": "Toppings",
+      "name_ar": "",
+      "min_select": 0,
+      "max_select": 5,
+      "options": [
+        { "key": "strawberry", "name_en": "Strawberry", "name_ar": "", "price": 0 },
+        { "key": "blueberry", "name_en": "Blueberry", "name_ar": "", "price": 0 },
+        { "key": "banana", "name_en": "Banana", "name_ar": "", "price": 0 },
+        { "key": "peanut_butter", "name_en": "Peanut Butter", "name_ar": "", "price": 0 },
+        { "key": "granola", "name_en": "Granola", "name_ar": "", "price": 0 }
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "key": "protein_shakes",
+      "name_en": "Protein Shakes",
+      "name_ar": "",
+      "items": [
+        {
+          "key": "blueberry_protein_shake",
+          "name_en": "Blueberry Protein Shake",
+          "name_ar": "",
+          "price": 30,
+          "ingredients_en": ["Milk", "Blueberry", "Avocado", "Banana", "Protein powder", "Chia seeds"],
+          "ingredients_ar": [],
+          "tags": ["high-protein"],
+          "nutrition": { "calories_kcal": 549, "carbs_g": 55.2, "protein_g": 42.7, "fiber_g": 17.9, "fat_g": 26.7, "micros_en": ["Potassium", "Vit K", "Manganese"], "micros_ar": [] }
+        },
+        {
+          "key": "tropical_protein",
+          "name_en": "Tropical Protein",
+          "name_ar": "",
+          "price": 30,
+          "ingredients_en": ["Mango", "Banana", "Blueberry", "Orange juice", "Protein powder"],
+          "ingredients_ar": [],
+          "tags": ["high-protein"],
+          "nutrition": { "calories_kcal": 346, "carbs_g": 53.1, "protein_g": 43.0, "fiber_g": 6.1, "fat_g": 3.0, "micros_en": ["Potassium", "Vit C"], "micros_ar": [] }
+        },
+        {
+          "key": "chocolate_recovery",
+          "name_en": "Chocolate Recovery",
+          "name_ar": "",
+          "price": 30,
+          "ingredients_en": ["Milk", "Banana", "Cocoa powder", "Protein powder"],
+          "ingredients_ar": [],
+          "tags": ["recovery", "high-protein"],
+          "nutrition": { "calories_kcal": 343, "carbs_g": 42.1, "protein_g": 38.4, "fiber_g": 10.6, "fat_g": 8.6, "micros_en": ["Iron", "Potassium", "Manganese"], "micros_ar": [] }
+        },
+        {
+          "key": "beets_n_berries",
+          "name_en": "Beets N Berries",
+          "name_ar": "",
+          "price": 30,
+          "ingredients_en": ["Strawberry", "Raspberry", "Beetroot", "Banana", "Dates puree", "Protein powder"],
+          "ingredients_ar": [],
+          "tags": ["high-protein"],
+          "nutrition": { "calories_kcal": 279, "carbs_g": 36.4, "protein_g": 32.1, "fiber_g": 5.7, "fat_g": 2.7, "micros_en": ["Vit C", "Potassium"], "micros_ar": [] }
+        },
+        {
+          "key": "pink_power_protein",
+          "name_en": "Pink Power Protein",
+          "name_ar": "",
+          "price": 30,
+          "ingredients_en": ["Dragon fruit", "Strawberry", "Yogurt", "Apple juice", "Protein powder"],
+          "ingredients_ar": [],
+          "tags": ["high-protein"],
+          "nutrition": { "calories_kcal": 329, "carbs_g": 39.9, "protein_g": 34.8, "fiber_g": 6.3, "fat_g": 3.6, "micros_en": ["Vit C", "Potassium", "Manganese", "Antioxidants"], "micros_ar": [] }
+        },
+        {
+          "key": "tropical_green_protein",
+          "name_en": "Tropical Green Protein",
+          "name_ar": "",
+          "price": 30,
+          "ingredients_en": ["Spinach", "Mango", "Pineapple", "Protein powder"],
+          "ingredients_ar": [],
+          "tags": ["greens", "high-protein"],
+          "nutrition": { "calories_kcal": 322, "carbs_g": 47.0, "protein_g": 33.4, "fiber_g": 6.2, "fat_g": 3.0, "micros_en": ["Vit A", "Vit C", "Iron", "Folate", "Vit K", "Manganese"], "micros_ar": [] }
+        },
+        {
+          "key": "morning_blend_protein",
+          "name_en": "Morning Blend Protein",
+          "name_ar": "",
+          "price": 30,
+          "ingredients_en": ["Strawberry", "Banana", "Dates", "Granola", "Cinnamon", "Oat milk", "Apple juice", "Protein powder"],
+          "ingredients_ar": [],
+          "tags": ["high-protein"],
+          "nutrition": { "calories_kcal": 650, "carbs_g": 118.0, "protein_g": 37.1, "fiber_g": 13.1, "fat_g": 9.4, "micros_en": ["Vit C", "Potassium"], "micros_ar": [] }
+        },
+        {
+          "key": "peanut_butter_protein",
+          "name_en": "Peanut Butter Protein",
+          "name_ar": "",
+          "price": 30,
+          "ingredients_en": ["Peanut butter", "Banana", "Almond milk", "Chocolate", "Protein powder"],
+          "ingredients_ar": [],
+          "tags": ["high-protein"],
+          "nutrition": { "calories_kcal": 837, "carbs_g": 46.5, "protein_g": 56.7, "fiber_g": 9.5, "fat_g": 53.3, "micros_en": ["Omega 3", "Omega 6", "Potassium", "Manganese", "Vit E"], "micros_ar": [] }
+        }
+      ]
+    },
+    {
+      "key": "healthy_bowls",
+      "name_en": "Healthy Bowls",
+      "name_ar": "",
+      "items": [
+        { "key": "blueberry_protein_bowl", "name_en": "Blueberry Protein Bowl", "name_ar": "", "price": 30, "ingredients_en": ["Mixed berries", "Yogurt", "Protein powder", "Granola"], "ingredients_ar": [], "tags": ["high-protein"], "nutrition": { "calories_kcal": 412, "carbs_g": 49.0, "protein_g": 38.5, "fiber_g": 10.7, "fat_g": 8.3, "micros_en": ["Vit C", "Antioxidants"], "micros_ar": [] } },
+        { "key": "acai_bowl", "name_en": "Acai Bowl", "name_ar": "", "price": 30, "ingredients_en": ["Acai puree", "Toppings"], "ingredients_ar": [], "tags": ["antioxidants"], "addons": ["toppings"], "nutrition": { "calories_kcal": 175, "carbs_g": 10.0, "protein_g": 2.5, "fiber_g": 7.5, "fat_g": 12.5, "micros_en": ["Antioxidants"], "micros_ar": [] } },
+        { "key": "pb_delight_bowl", "name_en": "Peanut Butter Delight Bowl", "name_ar": "", "price": 30, "ingredients_en": ["Peanut butter", "Banana", "Almond milk", "Cocoa powder", "Non-dairy creamer"], "ingredients_ar": [], "tags": ["energy"], "nutrition": { "calories_kcal": 915, "carbs_g": 91.7, "protein_g": 35.8, "fiber_g": 26.2, "fat_g": 61.7, "micros_en": ["Potassium", "Magnesium", "Iron"], "micros_ar": [] } },
+        { "key": "pink_oasis_bowl", "name_en": "Pink Oasis Bowl", "name_ar": "", "price": 30, "ingredients_en": ["Dragon fruit", "Pineapple", "Mango", "Strawberry", "Oat milk", "Non-dairy creamer"], "ingredients_ar": [], "tags": ["refresh"], "nutrition": { "calories_kcal": 199, "carbs_g": 41.6, "protein_g": 3.1, "fiber_g": 6.6, "fat_g": 3.5, "micros_en": ["Vit C", "Bromelain"], "micros_ar": [] } },
+        { "key": "tropical_heaven_bowl", "name_en": "Tropical Heaven Bowl", "name_ar": "", "price": 30, "ingredients_en": ["Pineapple", "Banana", "Mango", "Coconut milk", "Honey", "Spirulina", "Non-dairy creamer"], "ingredients_ar": [], "tags": ["greens"], "nutrition": { "calories_kcal": 325, "carbs_g": 52.7, "protein_g": 4.4, "fiber_g": 5.9, "fat_g": 14.8, "micros_en": ["Vit C", "Vit B", "Iron", "Potassium"], "micros_ar": [] } },
+        { "key": "green_dream_bowl", "name_en": "Green Dream Bowl", "name_ar": "", "price": 30, "ingredients_en": ["Pineapple", "Spinach", "Mango", "Coconut milk", "Avocado", "Non-dairy creamer"], "ingredients_ar": [], "tags": ["greens"], "nutrition": { "calories_kcal": 326, "carbs_g": 44.9, "protein_g": 4.8, "fiber_g": 7.9, "fat_g": 18.3, "micros_en": ["Vit A", "Vit C", "Vit K", "Iron"], "micros_ar": [] } },
+        { "key": "golden_sunrise_bowl", "name_en": "Golden Sunrise Bowl", "name_ar": "", "price": 30, "ingredients_en": ["Pineapple", "Mango", "Banana", "Coconut milk", "Honey", "Non-dairy creamer"], "ingredients_ar": [], "tags": ["energy"], "nutrition": { "calories_kcal": 9, "carbs_g": 72.2, "protein_g": 4.1, "fiber_g": 8.0, "fat_g": 13.9, "micros_en": ["Vit C", "Potassium"], "micros_ar": [] } }
+      ]
+    },
+    {
+      "key": "chia_oats_delights",
+      "name_en": "Chia & Oats Delights",
+      "name_ar": "",
+      "items": [
+        { "key": "chia_pudding_mixed_fruit", "name_en": "Chia Pudding with Mixed Fruit", "name_ar": "", "price": 20, "ingredients_en": ["Chia pudding", "Mixed fruit"], "ingredients_ar": [], "tags": ["fiber"], "nutrition": { "calories_kcal": 340, "carbs_g": 35.5, "protein_g": 12.8, "fiber_g": 15.4, "fat_g": 18.3, "micros_en": ["Antioxidants", "Vit C"], "micros_ar": [] } },
+        { "key": "banana_pb_chia_pudding", "name_en": "Banana Peanut Butter Chia Pudding", "name_ar": "", "price": 20, "ingredients_en": ["Banana", "Peanut butter", "Chia pudding"], "ingredients_ar": [], "tags": ["energy"], "nutrition": { "calories_kcal": 769, "carbs_g": 65.2, "protein_g": 28.1, "fiber_g": 20.0, "fat_g": 47.7, "micros_en": ["Antioxidants", "Omega 3"], "micros_ar": [] } },
+        { "key": "vanilla_protein_overnight_oats", "name_en": "Vanilla Protein Overnight Oats", "name_ar": "", "price": 20, "ingredients_en": ["Overnight oats", "Vanilla", "Protein"], "ingredients_ar": [], "tags": ["high-protein"], "nutrition": { "calories_kcal": 549, "carbs_g": 65.7, "protein_g": 39.3, "fiber_g": 8.9, "fat_g": 14.9, "micros_en": ["Vit C", "Iron", "Zinc", "Calcium"], "micros_ar": [] } },
+        { "key": "chocolate_protein_overnight_oats", "name_en": "Chocolate Protein Overnight Oats", "name_ar": "", "price": 20, "ingredients_en": ["Overnight oats", "Chocolate", "Protein"], "ingredients_ar": [], "tags": ["high-protein"], "nutrition": { "calories_kcal": 549, "carbs_g": 65.7, "protein_g": 39.3, "fiber_g": 8.9, "fat_g": 14.9, "micros_en": ["Vit C", "Iron", "Zinc", "Calcium"], "micros_ar": [] } }
+      ]
+    },
+    {
+      "key": "smoothies",
+      "name_en": "Smoothies",
+      "name_ar": "",
+      "items": [
+        { "key": "immune_booster", "name_en": "Immune Booster", "name_ar": "", "price": 20, "ingredients_en": ["Orange", "Carrot", "Peach"], "ingredients_ar": [], "tags": ["immunity"], "nutrition": { "calories_kcal": 301, "carbs_g": 74.0, "protein_g": 6.5, "fiber_g": 17.2, "fat_g": 1.8, "micros_en": ["Vit A", "Vit C", "Potassium"], "micros_ar": [] } },
+        { "key": "energy_boost", "name_en": "Energy Boost", "name_ar": "", "price": 20, "ingredients_en": ["Apple", "Beetroot", "Banana"], "ingredients_ar": [], "tags": ["energy"], "nutrition": { "calories_kcal": 324, "carbs_g": 80.6, "protein_g": 5.5, "fiber_g": 14.8, "fat_g": 1.1, "micros_en": ["Vit B6", "Folate"], "micros_ar": [] } },
+        { "key": "creamy_green", "name_en": "Creamy Green", "name_ar": "", "price": 20, "ingredients_en": ["Avocado", "Spinach", "Milk"], "ingredients_ar": [], "tags": ["greens"], "nutrition": { "calories_kcal": 750, "carbs_g": 42.0, "protein_g": 17.5, "fiber_g": 24.0, "fat_g": 65.0, "micros_en": ["Vit A", "Vit K", "Folate", "Potassium", "Calcium"], "micros_ar": [] } },
+        { "key": "mango_turmeric", "name_en": "Mango Turmeric", "name_ar": "", "price": 20, "ingredients_en": ["Mango", "Banana", "Ginger", "Turmeric", "Milk"], "ingredients_ar": [], "tags": ["wellness"], "nutrition": { "calories_kcal": 370, "carbs_g": 83.5, "protein_g": 7.9, "fiber_g": 10.1, "fat_g": 5.1, "micros_en": ["Vit A", "Vit C", "Calcium", "Magnesium"], "micros_ar": [] } },
+        { "key": "fiber_aid", "name_en": "Fiber Aid", "name_ar": "", "price": 20, "ingredients_en": ["Pineapple", "Mango", "Orange juice", "Lime juice"], "ingredients_ar": [], "tags": ["fiber"], "nutrition": { "calories_kcal": 340, "carbs_g": 84.4, "protein_g": 4.9, "fiber_g": 9.0, "fat_g": 1.8, "micros_en": ["Vit A"], "micros_ar": [] } },
+        { "key": "healthy_blueberry_magic", "name_en": "Healthy Blueberry Magic", "name_ar": "", "price": 20, "ingredients_en": ["Blueberry", "Orange", "Papaya", "Banana", "Yogurt"], "ingredients_ar": [], "tags": ["wellness"], "nutrition": { "calories_kcal": 253, "carbs_g": 60.7, "protein_g": 4.0, "fiber_g": 8.3, "fat_g": 1.7, "micros_en": ["Vit C", "Vit A", "Potassium", "Folate", "Manganese"], "micros_ar": [] } },
+        { "key": "feel_good", "name_en": "Feel Good", "name_ar": "", "price": 20, "ingredients_en": ["Carrot", "Apple", "Lemon", "Ginger", "Turmeric"], "ingredients_ar": [], "tags": ["wellness"], "nutrition": { "calories_kcal": 146, "carbs_g": 34.1, "protein_g": 1.9, "fiber_g": 5.2, "fat_g": 0.8, "micros_en": ["Vit A", "Vit C", "Vit K"], "micros_ar": [] } },
+        { "key": "acai_smoothie", "name_en": "Acai Smoothie", "name_ar": "", "price": 20, "ingredients_en": ["Acai puree", "Toppings"], "ingredients_ar": [], "tags": ["antioxidants"], "addons": ["toppings"], "nutrition": { "calories_kcal": 365, "carbs_g": 43.9, "protein_g": 8.3, "fiber_g": 10.2, "fat_g": 16.9, "micros_en": ["Omega", "Antioxidants", "Potassium"], "micros_ar": [] } },
+        { "key": "blue_crush", "name_en": "Blue Crush", "name_ar": "", "price": 20, "ingredients_en": ["Pineapple", "Banana", "Yogurt", "Lemon", "Apple juice", "Spirulina"], "ingredients_ar": [], "tags": ["greens"], "nutrition": { "calories_kcal": 256, "carbs_g": 62.0, "protein_g": 4.4, "fiber_g": 5.7, "fat_g": 1.1, "micros_en": ["Vit C", "Potassium", "Iron", "Bromelain"], "micros_ar": [] } },
+        { "key": "sleep_potion", "name_en": "Sleep Potion", "name_ar": "", "price": 20, "ingredients_en": ["Banana", "Granola", "Almond milk"], "ingredients_ar": [], "tags": ["sleep"], "nutrition": { "calories_kcal": 327, "carbs_g": 75.6, "protein_g": 4.9, "fiber_g": 8.8, "fat_g": 3.4, "micros_en": ["Potassium"], "micros_ar": [] } }
+      ]
+    },
+    {
+      "key": "wellness_shots",
+      "name_en": "Wellness Shots",
+      "name_ar": "",
+      "items": [
+        { "key": "ginger_zinger", "name_en": "The Ginger Zinger", "name_ar": "", "price": 10, "ingredients_en": [], "ingredients_ar": [], "tags": ["shot"], "nutrition": {} },
+        { "key": "turmeric_sunshine", "name_en": "Turmeric Sunshine", "name_ar": "", "price": 10, "ingredients_en": [], "ingredients_ar": [], "tags": ["shot"], "nutrition": {} },
+        { "key": "beetroot_boost", "name_en": "Beetroot Boost", "name_ar": "", "price": 10, "ingredients_en": [], "ingredients_ar": [], "tags": ["shot"], "nutrition": {} },
+        { "key": "green_goodies", "name_en": "Green Goodies", "name_ar": "", "price": 10, "ingredients_en": [], "ingredients_ar": [], "tags": ["shot"], "nutrition": {} },
+        { "key": "pineapple_ginger_shot", "name_en": "Pineapple Ginger Shot", "name_ar": "", "price": 10, "ingredients_en": [], "ingredients_ar": [], "tags": ["shot"], "nutrition": {} },
+        { "key": "vitamin_c_citrus_shot", "name_en": "Vitamin C Citrus Shot", "name_ar": "", "price": 10, "ingredients_en": [], "ingredients_ar": [], "tags": ["shot"], "nutrition": {} },
+        { "key": "garlic_honey_shot", "name_en": "Garlic Honey Shot", "name_ar": "", "price": 10, "ingredients_en": [], "ingredients_ar": [], "tags": ["shot"], "nutrition": {} },
+        { "key": "green_tea", "name_en": "Green Tea", "name_ar": "", "price": 10, "ingredients_en": [], "ingredients_ar": [], "tags": ["shot"], "nutrition": {} },
+        { "key": "carrot_ginger_shot", "name_en": "Carrot Ginger Shot", "name_ar": "", "price": 10, "ingredients_en": [], "ingredients_ar": [], "tags": ["shot"], "nutrition": {} }
+      ]
+    },
+    {
+      "key": "fruits_cup",
+      "name_en": "Fruits Cup",
+      "name_ar": "",
+      "items": [
+        { "key": "mango_bricks", "name_en": "Mango Bricks", "name_ar": "", "price": 25, "ingredients_en": ["Mango"], "ingredients_ar": [], "tags": ["fruit"], "nutrition": {} },
+        { "key": "kiwi_bricks", "name_en": "Kiwi Bricks", "name_ar": "", "price": 25, "ingredients_en": ["Kiwi"], "ingredients_ar": [], "tags": ["fruit"], "nutrition": {} },
+        { "key": "pineapple_bricks", "name_en": "Pineapple Bricks", "name_ar": "", "price": 25, "ingredients_en": ["Pineapple"], "ingredients_ar": [], "tags": ["fruit"], "nutrition": {} },
+        { "key": "carrot_bricks", "name_en": "Carrot Bricks", "name_ar": "", "price": 25, "ingredients_en": ["Carrot"], "ingredients_ar": [], "tags": ["fruit"], "nutrition": {} },
+        { "key": "orange_bricks", "name_en": "Orange Bricks", "name_ar": "", "price": 25, "ingredients_en": ["Orange"], "ingredients_ar": [], "tags": ["fruit"], "nutrition": {} },
+        { "key": "avocado_bricks", "name_en": "Avocado Bricks", "name_ar": "", "price": 25, "ingredients_en": ["Avocado"], "ingredients_ar": [], "tags": ["fruit"], "nutrition": {} },
+        { "key": "pomegranate_seasonal", "name_en": "Pomegranate (Seasonal)", "name_ar": "", "price": 25, "ingredients_en": ["Pomegranate"], "ingredients_ar": [], "tags": ["fruit", "seasonal"], "nutrition": {} },
+        { "key": "grapefruit_seasonal", "name_en": "Grapefruit (Seasonal)", "name_ar": "", "price": 25, "ingredients_en": ["Grapefruit"], "ingredients_ar": [], "tags": ["fruit", "seasonal"], "nutrition": {} },
+        { "key": "banana", "name_en": "Banana", "name_ar": "", "price": 25, "ingredients_en": ["Banana"], "ingredients_ar": [], "tags": ["fruit"], "nutrition": {} },
+        { "key": "mixed_cup", "name_en": "Mixed Cup", "name_ar": "", "price": 25, "ingredients_en": ["Mixed fruits"], "ingredients_ar": [], "tags": ["fruit"], "nutrition": {} }
+      ]
+    },
+    {
+      "key": "fresh_juices",
+      "name_en": "Fresh Juices",
+      "name_ar": "",
+      "items": [
+        { "key": "orange_juice", "name_en": "Orange Juice", "name_ar": "", "price": 15, "ingredients_en": ["Orange"], "ingredients_ar": [], "tags": ["juice"], "nutrition": {} },
+        { "key": "apple_juice", "name_en": "Apple Juice", "name_ar": "", "price": 20, "ingredients_en": ["Apple"], "ingredients_ar": [], "tags": ["juice"], "nutrition": {} },
+        { "key": "mango_juice", "name_en": "Mango Juice", "name_ar": "", "price": 20, "ingredients_en": ["Mango"], "ingredients_ar": [], "tags": ["juice"], "nutrition": {} },
+        { "key": "avocado_juice", "name_en": "Avocado Juice", "name_ar": "", "price": 20, "ingredients_en": ["Avocado"], "ingredients_ar": [], "tags": ["juice"], "nutrition": {} },
+        { "key": "carrot_juice", "name_en": "Carrot Juice", "name_ar": "", "price": 20, "ingredients_en": ["Carrot"], "ingredients_ar": [], "tags": ["juice"], "nutrition": {} },
+        { "key": "kiwi_juice", "name_en": "Kiwi Juice", "name_ar": "", "price": 25, "ingredients_en": ["Kiwi"], "ingredients_ar": [], "tags": ["juice"], "nutrition": {} },
+        { "key": "pineapple_juice", "name_en": "Pineapple Juice", "name_ar": "", "price": 25, "ingredients_en": ["Pineapple"], "ingredients_ar": [], "tags": ["juice"], "nutrition": {} },
+        { "key": "tender_coconut_juice", "name_en": "Tender Coconut Juice", "name_ar": "", "price": 25, "ingredients_en": ["Tender coconut"], "ingredients_ar": [], "tags": ["juice"], "nutrition": {} }
+      ]
+    }
+  ]
+}

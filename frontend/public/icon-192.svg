@@ -1,0 +1,10 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="192" height="192" rx="45" fill="#22c55e"/>
+  
+  <!-- Leaf/Salad icon -->
+  <g transform="translate(48, 48)">
+    <path d="M48 96C48 74.909 63.973 57 84 57C104.027 57 120 74.909 120 96C120 117.091 104.027 135 84 135C63.973 135 48 117.091 48 96Z" fill="#ffffff" opacity="0.3"/>
+    <path d="M60 80C60 80 70 60 84 60C98 60 108 80 108 80M84 120L72 100M84 120L96 100M84 120V140" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+</svg>

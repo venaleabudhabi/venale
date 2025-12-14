@@ -42,8 +42,10 @@ interface Order {
     total: number;
   };
   payment: {
-    method: 'COD' | 'CARD';
+    method: 'COD' | 'CARD' | 'APPLE_PAY' | 'GOOGLE_PAY';
     status: string;
+    cardLast4?: string;
+    cardBrand?: string;
   };
   createdAt: string;
   statusTimeline: {
@@ -254,9 +256,24 @@ export default function StaffOrdersPage() {
                       className="text-primary-600"
                     />
                     <span className={`text-xs px-2 py-1 rounded ${
-                      order.payment.method === 'COD' ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'
+                      order.payment.method === 'COD' 
+                        ? 'bg-orange-100 text-orange-800' 
+                        : order.payment.method === 'APPLE_PAY'
+                        ? 'bg-gray-900 text-white'
+                        : order.payment.method === 'GOOGLE_PAY'
+                        ? 'bg-blue-100 text-blue-800'
+                        : 'bg-green-100 text-green-800'
                     }`}>
-                      {order.payment.method === 'COD' ? (lang === 'ar' ? 'نقدي' : 'Cash') : (lang === 'ar' ? 'بطاقة' : 'Card')}
+                      {order.payment.method === 'COD' 
+                        ? (lang === 'ar' ? 'نقدي عند الاستلام' : 'Cash on Delivery')
+                        : order.payment.method === 'APPLE_PAY'
+                        ? ' Pay'
+                        : order.payment.method === 'GOOGLE_PAY'
+                        ? 'G Pay'
+                        : order.payment.cardLast4
+                        ? `${order.payment.cardBrand || 'Card'} •••• ${order.payment.cardLast4}`
+                        : (lang === 'ar' ? 'بطاقة' : 'Card')
+                      }
                     </span>
                   </div>
                 </div>
@@ -353,6 +370,65 @@ export default function StaffOrdersPage() {
                     <span>{lang === 'ar' ? 'الإجمالي:' : 'Total:'}</span>
                     <DirhamAmount amount={selectedOrder.totals.total} size="lg" bold className="text-primary-600" />
                   </div>
+                </div>
+              </div>
+
+              {/* Payment Information */}
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-700 mb-2">{lang === 'ar' ? 'طريقة الدفع' : 'Payment Method'}</h3>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  {selectedOrder.payment.method === 'COD' ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">{lang === 'ar' ? 'نقدي عند الاستلام' : 'Cash on Delivery'}</p>
+                        <p className="text-xs text-gray-500">{lang === 'ar' ? 'يُدفع عند الاستلام' : 'Pay when receiving order'}</p>
+                      </div>
+                    </div>
+                  ) : selectedOrder.payment.method === 'APPLE_PAY' ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm"> Pay</p>
+                        <p className="text-xs text-green-600">{lang === 'ar' ? '✓ مدفوع' : '✓ Paid'}</p>
+                      </div>
+                    </div>
+                  ) : selectedOrder.payment.method === 'GOOGLE_PAY' ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-10 bg-white border-2 border-gray-200 rounded-lg flex items-center justify-center">
+                        <svg className="w-6 h-6" viewBox="0 0 24 24">
+                          <path fill="#4285F4" d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">Google Pay</p>
+                        <p className="text-xs text-green-600">{lang === 'ar' ? '✓ مدفوع' : '✓ Paid'}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">
+                          {selectedOrder.payment.cardBrand || (lang === 'ar' ? 'بطاقة' : 'Card')} 
+                          {selectedOrder.payment.cardLast4 && ` •••• ${selectedOrder.payment.cardLast4}`}
+                        </p>
+                        <p className="text-xs text-green-600">{lang === 'ar' ? '✓ مدفوع' : '✓ Paid'}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

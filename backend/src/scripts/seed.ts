@@ -95,15 +95,61 @@ const seedDatabase = async () => {
       console.log(`ℹ️  Admin user already exists: ${adminEmail}`);
     }
 
+    // Create default staff user
+    const staffEmail = process.env.STAFF_EMAIL || 'staff@revive.ae';
+    let staffUser = await User.findOne({ email: staffEmail });
+    
+    if (!staffUser) {
+      const passwordHash = await bcrypt.hash(process.env.STAFF_PASSWORD || 'Staff123!', 10);
+      staffUser = new User({
+        venueId: venue._id,
+        role: 'staff',
+        name: 'Staff User',
+        email: staffEmail,
+        passwordHash,
+        isActive: true,
+      });
+      await staffUser.save();
+      console.log(`✅ Staff user created: ${staffEmail}`);
+    } else {
+      console.log(`ℹ️  Staff user already exists: ${staffEmail}`);
+    }
+
+    // Create default driver user
+    const driverEmail = process.env.DRIVER_EMAIL || 'driver@revive.ae';
+    let driverUser = await User.findOne({ email: driverEmail });
+    
+    if (!driverUser) {
+      const passwordHash = await bcrypt.hash(process.env.DRIVER_PASSWORD || 'Driver123!', 10);
+      driverUser = new User({
+        venueId: venue._id,
+        role: 'driver',
+        name: 'Driver User',
+        email: driverEmail,
+        passwordHash,
+        isActive: true,
+      });
+      await driverUser.save();
+      console.log(`✅ Driver user created: ${driverEmail}`);
+    } else {
+      console.log(`ℹ️  Driver user already exists: ${driverEmail}`);
+    }
+
     console.log('\n🎉 Database seed completed successfully!');
-    console.log(`\n�� Summary:`);
+    console.log(`\n📊 Summary:`);
     console.log(`   Venue: ${venue.name_en}`);
     console.log(`   Categories: ${menuData.categories.length}`);
     console.log(`   Items: ${menuData.categories.reduce((sum, cat) => sum + cat.items.length, 0)}`);
     console.log(`   Addon Groups: ${addonGroups.length}`);
-    console.log(`\n🔐 Admin Login:`);
-    console.log(`   Email: ${adminEmail}`);
-    console.log(`   Password: ${process.env.ADMIN_PASSWORD || 'Admin123!'}`);
+    console.log(`\n👥 User Accounts:`);
+    console.log(`   Admin:  ${adminEmail} / ${process.env.ADMIN_PASSWORD || 'Admin123!'}`);
+    console.log(`   Staff:  ${staffEmail} / ${process.env.STAFF_PASSWORD || 'Staff123!'}`);
+    console.log(`   Driver: ${driverEmail} / ${process.env.DRIVER_PASSWORD || 'Driver123!'}`);
+    console.log('\n💡 Access URLs:');
+    console.log('   Customer Menu: http://localhost:3000/m/revive-refuel-venale');
+    console.log('   Admin Portal:  http://localhost:3000/admin/login');
+    console.log('   Staff Portal:  http://localhost:3000/staff/login');
+    console.log('   Driver Portal: http://localhost:3000/driver/login\n');
     
     process.exit(0);
   } catch (error) {

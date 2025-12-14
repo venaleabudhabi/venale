@@ -13,9 +13,9 @@ export default function AdminLoginPage() {
 
   const loginMutation = useMutation({
     mutationFn: () => authApi.login(email, password),
-    onSuccess: (response) => {
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('adminUser', JSON.stringify(response.data.user));
+    onSuccess: (data) => {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('adminUser', JSON.stringify(data.user));
       toast.success('Login successful');
       router.push('/admin/menu');
     },

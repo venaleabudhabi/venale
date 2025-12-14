@@ -75,15 +75,6 @@ export default function MenuPage({ params }: { params: { venueSlug: string } }) 
         </div>
       </header>
 
-      {/* Member Discount Banner */}
-      {data?.venue.member_discount_percent > 0 && (
-        <div className="bg-gradient-to-r from-primary-50 to-primary-100 border-l-4 border-primary-600 p-4 mx-4 mt-6 rounded-lg">
-          <p className="text-sm font-medium text-primary-800">
-            ✨ {data.venue.member_discount_note}
-          </p>
-        </div>
-      )}
-
       {/* Categories */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h2 className="section-title">Menu Categories</h2>

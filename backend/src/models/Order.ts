@@ -40,9 +40,13 @@ export interface IOrder extends Document {
     lng?: number;
   };
   payment: {
-    method: 'COD' | 'CARD';
+    method: 'COD' | 'CARD' | 'APPLE_PAY' | 'GOOGLE_PAY';
     status: 'PENDING' | 'PAID' | 'FAILED';
     stripeSessionId?: string;
+    transactionId?: string;
+    paidAt?: Date;
+    cardLast4?: string;
+    cardBrand?: string;
   };
   items: IOrderItem[];
   totals: {
@@ -81,9 +85,13 @@ const orderSchema = new Schema<IOrder>(
       lng: { type: Number },
     },
     payment: {
-      method: { type: String, enum: ['COD', 'CARD'], required: true },
+      method: { type: String, enum: ['COD', 'CARD', 'APPLE_PAY', 'GOOGLE_PAY'], required: true },
       status: { type: String, enum: ['PENDING', 'PAID', 'FAILED'], default: 'PENDING' },
       stripeSessionId: { type: String },
+      transactionId: { type: String },
+      paidAt: { type: Date },
+      cardLast4: { type: String },
+      cardBrand: { type: String },
     },
     items: [
       {

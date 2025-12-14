@@ -6,13 +6,16 @@ import { useLanguageStore, useCartStore } from '@/lib/store';
 import { useTranslation } from '@/lib/i18n';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import NutritionModal from '@/components/NutritionModal';
+import DirhamAmount from '@/components/DirhamAmount';
 
 export default function CategoryPage({ params }: { params: { venueSlug: string; categoryKey: string } }) {
   const router = useRouter();
   const { lang } = useLanguageStore();
   const { t, dir } = useTranslation(lang);
   const addToCart = useCartStore((state) => state.addItem);
+  const cartItems = useCartStore((state) => state.getTotalItems());
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
   const [selectedNutrition, setSelectedNutrition] = useState<MenuItem | null>(null);
 
@@ -36,7 +39,8 @@ export default function CategoryPage({ params }: { params: { venueSlug: string; 
       qty: 1,
       selectedAddons: [],
     });
-    router.push(`/m/${params.venueSlug}/cart`);
+    // Don't redirect - let user continue browsing
+    // Cart FAB will show updated count
   };
 
   return (
@@ -109,9 +113,7 @@ export default function CategoryPage({ params }: { params: { venueSlug: string; 
                   </div>
                 )}
                 <div className="flex items-center justify-between mt-3">
-                  <span className="text-lg font-bold text-primary-600">
-                    {data?.venue.currency} {item.price}
-                  </span>
+                  <DirhamAmount amount={item.price} size="lg" bold className="text-primary-600" />
                   <button
                     onClick={() => handleAddToCart(item)}
                     className="bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-700 active:scale-95 transition-all"
@@ -155,6 +157,19 @@ export default function CategoryPage({ params }: { params: { venueSlug: string; 
           </div>
         ))}
       </div>
+
+      {/* Cart FAB */}
+      {cartItems > 0 && (
+        <Link
+          href={`/m/${params.venueSlug}/cart`}
+          className="fixed bottom-6 right-6 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-full px-6 py-4 shadow-lg flex items-center gap-3 hover:shadow-xl hover:scale-105 transition-all duration-200 z-50"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span className="font-bold">{t('cart')} ({cartItems})</span>
+        </Link>
+      )}
 
       {/* Nutrition Modal */}
       <NutritionModal

@@ -2,16 +2,24 @@ import Order from '../models/Order';
 
 export const generateOrderNumber = async (): Promise<string> => {
   const date = new Date();
-  const prefix = `RV${date.getFullYear().toString().slice(-2)}${(date.getMonth() + 1)
+  
+  // Format: DDMMYYYY
+  const dateStr = `${date.getDate().toString().padStart(2, '0')}${(date.getMonth() + 1)
     .toString()
-    .padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`;
-
-  // Find today's orders
+    .padStart(2, '0')}${date.getFullYear()}`;
+  
+  // Get start and end of today (midnight to midnight)
+  const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+  const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+  
+  // Count today's orders only (resets at midnight)
   const count = await Order.countDocuments({
-    orderNumber: new RegExp(`^${prefix}`),
+    createdAt: { $gte: startOfDay, $lte: endOfDay },
   });
 
-  return `${prefix}-${(count + 1).toString().padStart(4, '0')}`;
+  // Format: VENXREV-001-13122025
+  const orderNum = (count + 1).toString().padStart(3, '0');
+  return `VENXREV-${orderNum}-${dateStr}`;
 };
 
 export const calculateTotals = (

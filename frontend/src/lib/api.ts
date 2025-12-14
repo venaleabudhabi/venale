@@ -99,7 +99,10 @@ export const paymentApi = {
 };
 
 export const authApi = {
-  login: (email: string, password: string) => api.post('/auth/login', { email, password }),
+  login: async (email: string, password: string) => {
+    const response = await api.post('/auth/login', { email, password });
+    return response.data;
+  },
 };
 
 // Helper to get auth headers

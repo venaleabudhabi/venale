@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -29,15 +29,18 @@ interface Order {
 export default function DriverOrdersPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('driver_token');
     if (!token) {
       router.push('/driver/login');
+    } else {
+      setIsAuthenticated(true);
     }
   }, [router]);
 
-  const { data: orders, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['driver', 'orders'],
     queryFn: async () => {
       const token = localStorage.getItem('driver_token');
@@ -46,8 +49,11 @@ export default function DriverOrdersPage() {
       });
       return response.data;
     },
+    enabled: isAuthenticated,
     refetchInterval: 10000, // Poll every 10s
   });
+
+  const orders = data?.orders || [];
 
   const updateStatus = useMutation({
     mutationFn: async ({ orderId, status }: { orderId: string; status: string }) => {
@@ -69,7 +75,7 @@ export default function DriverOrdersPage() {
     router.push('/driver/login');
   };
 
-  if (isLoading) {
+  if (!isAuthenticated || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner size="lg" />
@@ -93,7 +99,7 @@ export default function DriverOrdersPage() {
 
       {/* Orders List */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {!orders || orders.length === 0 ? (
+        {orders.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-8 text-center">
             <p className="text-gray-500">No deliveries assigned</p>
           </div>

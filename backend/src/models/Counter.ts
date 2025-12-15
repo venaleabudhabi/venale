@@ -1,6 +1,6 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-export interface ICounter extends Document {
+export interface ICounter {
   _id: string; // e.g., "order-15122025"
   seq: number;
   date: string; // DDMMYYYY format

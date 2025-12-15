@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Heatmap cell styling for analytics dashboard */
+.heatmap-intensity-20 { background-color: rgba(59, 130, 246, 0.2); }
+.heatmap-intensity-40 { background-color: rgba(59, 130, 246, 0.4); }
+.heatmap-intensity-60 { background-color: rgba(59, 130, 246, 0.6); }
+.heatmap-intensity-80 { background-color: rgba(59, 130, 246, 0.8); }
+.heatmap-intensity-100 { background-color: rgba(59, 130, 246, 1); }
+
 /* UAE Dirham Symbol Font */
 @font-face {
   font-family: 'UAESymbol';

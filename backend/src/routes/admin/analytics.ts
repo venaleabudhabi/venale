@@ -295,7 +295,10 @@ router.get('/customers', async (req: AuthRequest, res) => {
           _id: '$customer.phone',
           name: { $first: '$customer.name' },
           orderCount: { $sum: 1 },
-          totalSpent: { $sum: '$totals.total' }
+          totalSpent: { $sum: '$totals.total' },
+          avgOrderValue: { $avg: '$totals.total' },
+          lastOrderDate: { $max: '$createdAt' },
+          firstOrderDate: { $min: '$createdAt' }
         }
       },
       { $sort: sortField },
@@ -332,6 +335,240 @@ router.get('/customers', async (req: AuthRequest, res) => {
   } catch (error) {
     console.error('Customers error:', error);
     res.status(500).json({ error: 'Failed to fetch customer analytics' });
+  }
+});
+
+// GET /api/admin/analytics/customer-insights - Advanced customer analytics
+router.get('/customer-insights', async (req: AuthRequest, res) => {
+  try {
+    const { period = 'month', startDate, endDate } = req.query;
+    
+    let dateRange;
+    if (startDate && endDate) {
+      dateRange = { start: new Date(startDate as string), end: new Date(endDate as string) };
+    } else {
+      dateRange = getDateRange(period as string);
+    }
+
+    // RFM Analysis (Recency, Frequency, Monetary)
+    const now = new Date();
+    const rfmAnalysis = await Order.aggregate([
+      {
+        $match: {
+          venueId: req.user!.venueId,
+          currentStatus: { $ne: 'CANCELLED' }
+        }
+      },
+      {
+        $group: {
+          _id: '$customer.phone',
+          name: { $first: '$customer.name' },
+          lastOrderDate: { $max: '$createdAt' },
+          orderCount: { $sum: 1 },
+          totalSpent: { $sum: '$totals.total' },
+          avgOrderValue: { $avg: '$totals.total' }
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          recency: {
+            $divide: [
+              { $subtract: [now, '$lastOrderDate'] },
+              1000 * 60 * 60 * 24 // Convert to days
+            ]
+          },
+          frequency: '$orderCount',
+          monetary: '$totalSpent',
+          avgOrderValue: 1
+        }
+      }
+    ]);
+
+    // Segment customers based on RFM
+    const segmentedCustomers = rfmAnalysis.map(customer => {
+      let segment = '';
+      const recency = customer.recency;
+      const frequency = customer.frequency;
+      const monetary = customer.monetary;
+
+      if (recency <= 7 && frequency >= 5 && monetary >= 200) {
+        segment = 'VIP';
+      } else if (recency <= 14 && frequency >= 3) {
+        segment = 'Loyal';
+      } else if (recency <= 30 && frequency >= 2) {
+        segment = 'Regular';
+      } else if (recency <= 60 && frequency === 1) {
+        segment = 'New';
+      } else if (recency > 60) {
+        segment = 'At Risk';
+      } else {
+        segment = 'Occasional';
+      }
+
+      return { ...customer, segment };
+    });
+
+    // Customer ordering patterns (by hour)
+    const orderingPatterns = await Order.aggregate([
+      {
+        $match: {
+          venueId: req.user!.venueId,
+          createdAt: { $gte: dateRange.start, $lte: dateRange.end }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            phone: '$customer.phone',
+            hour: { $hour: '$createdAt' }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $group: {
+          _id: '$_id.phone',
+          preferredHours: {
+            $push: {
+              hour: '$_id.hour',
+              count: '$count'
+            }
+          }
+        }
+      }
+    ]);
+
+    // High and low amount orders
+    const orderAmountDistribution = await Order.aggregate([
+      {
+        $match: {
+          venueId: req.user!.venueId,
+          createdAt: { $gte: dateRange.start, $lte: dateRange.end },
+          currentStatus: { $ne: 'CANCELLED' }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          avgOrder: { $avg: '$totals.total' },
+          minOrder: { $min: '$totals.total' },
+          maxOrder: { $max: '$totals.total' },
+          totalOrders: { $sum: 1 }
+        }
+      }
+    ]);
+
+    // High value orders (top 10%)
+    const highValueOrders = await Order.find({
+      venueId: req.user!.venueId,
+      createdAt: { $gte: dateRange.start, $lte: dateRange.end },
+      currentStatus: { $ne: 'CANCELLED' }
+    })
+      .sort({ 'totals.total': -1 })
+      .limit(10)
+      .select('orderNumber customer.name customer.phone totals.total createdAt items');
+
+    // Low value orders (bottom 10%)
+    const lowValueOrders = await Order.find({
+      venueId: req.user!.venueId,
+      createdAt: { $gte: dateRange.start, $lte: dateRange.end },
+      currentStatus: { $ne: 'CANCELLED' }
+    })
+      .sort({ 'totals.total': 1 })
+      .limit(10)
+      .select('orderNumber customer.name customer.phone totals.total createdAt items');
+
+    // Order frequency distribution
+    const orderFrequency = await Order.aggregate([
+      {
+        $match: {
+          venueId: req.user!.venueId,
+          createdAt: { $gte: dateRange.start, $lte: dateRange.end }
+        }
+      },
+      {
+        $group: {
+          _id: '$customer.phone',
+          orderCount: { $sum: 1 }
+        }
+      },
+      {
+        $group: {
+          _id: '$orderCount',
+          customerCount: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    // Customer lifetime value
+    const lifetimeValue = await Order.aggregate([
+      {
+        $match: {
+          venueId: req.user!.venueId,
+          currentStatus: { $ne: 'CANCELLED' }
+        }
+      },
+      {
+        $group: {
+          _id: '$customer.phone',
+          name: { $first: '$customer.name' },
+          totalSpent: { $sum: '$totals.total' },
+          orderCount: { $sum: 1 },
+          firstOrder: { $min: '$createdAt' },
+          lastOrder: { $max: '$createdAt' }
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          totalSpent: 1,
+          orderCount: 1,
+          customerAge: {
+            $divide: [
+              { $subtract: ['$lastOrder', '$firstOrder'] },
+              1000 * 60 * 60 * 24 // Days
+            ]
+          }
+        }
+      },
+      { $sort: { totalSpent: -1 } },
+      { $limit: 10 }
+    ]);
+
+    // Segment statistics
+    const segmentStats = segmentedCustomers.reduce((acc: any, customer: any) => {
+      if (!acc[customer.segment]) {
+        acc[customer.segment] = { count: 0, totalRevenue: 0, avgFrequency: 0 };
+      }
+      acc[customer.segment].count++;
+      acc[customer.segment].totalRevenue += customer.monetary;
+      acc[customer.segment].avgFrequency += customer.frequency;
+      return acc;
+    }, {});
+
+    // Calculate averages
+    Object.keys(segmentStats).forEach(segment => {
+      segmentStats[segment].avgFrequency = 
+        segmentStats[segment].avgFrequency / segmentStats[segment].count;
+    });
+
+    res.json({
+      rfmAnalysis: segmentedCustomers.slice(0, 20),
+      segmentStats,
+      orderingPatterns: orderingPatterns.slice(0, 10),
+      orderAmountDistribution: orderAmountDistribution[0] || {},
+      highValueOrders,
+      lowValueOrders,
+      orderFrequency,
+      lifetimeValue
+    });
+  } catch (error) {
+    console.error('Customer insights error:', error);
+    res.status(500).json({ error: 'Failed to fetch customer insights' });
   }
 });
 

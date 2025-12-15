@@ -120,6 +120,18 @@ export default function AdminDashboardPage() {
     },
   });
 
+  // Fetch customer insights
+  const { data: customerInsights } = useQuery({
+    queryKey: ['admin', 'analytics', 'customer-insights', dateFilter, customStartDate, customEndDate],
+    queryFn: async () => {
+      const params = new URLSearchParams(getDateParams() as any);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api'}/admin/analytics/customer-insights?${params}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      return res.json();
+    },
+  });
+
   // Export to Excel
   const exportToExcel = () => {
     const wb = XLSX.utils.book_new();
@@ -153,6 +165,34 @@ export default function AdminDashboardPage() {
       ];
       const customersWs = XLSX.utils.aoa_to_sheet(customersData);
       XLSX.utils.book_append_sheet(wb, customersWs, 'Customers');
+    }
+
+    // Customer Insights sheet
+    if (customerInsights?.rfmAnalysis) {
+      const insightsData = [
+        ['Phone', 'Name', 'Segment', 'Recency (days)', 'Frequency', 'Monetary', 'Avg Order'],
+        ...customerInsights.rfmAnalysis.map((c: any) => [
+          c._id, c.name || 'Guest', c.segment, c.recency.toFixed(0), c.frequency, c.monetary.toFixed(2), c.avgOrderValue.toFixed(2)
+        ])
+      ];
+      const insightsWs = XLSX.utils.aoa_to_sheet(insightsData);
+      XLSX.utils.book_append_sheet(wb, insightsWs, 'Customer Insights');
+    }
+
+    // High & Low Orders sheet
+    if (customerInsights?.highValueOrders && customerInsights?.lowValueOrders) {
+      const ordersData = [
+        ['Type', 'Order #', 'Customer', 'Phone', 'Amount', 'Date'],
+        ...customerInsights.highValueOrders.map((o: any) => [
+          'High', o.orderNumber, o.customer.name, o.customer.phone, o.totals.total, new Date(o.createdAt).toLocaleDateString()
+        ]),
+        [],
+        ...customerInsights.lowValueOrders.map((o: any) => [
+          'Low', o.orderNumber, o.customer.name, o.customer.phone, o.totals.total, new Date(o.createdAt).toLocaleDateString()
+        ])
+      ];
+      const ordersWs = XLSX.utils.aoa_to_sheet(ordersData);
+      XLSX.utils.book_append_sheet(wb, ordersWs, 'High-Low Orders');
     }
 
     XLSX.writeFile(wb, `analytics-${dateFilter}-${new Date().toISOString().split('T')[0]}.xlsx`);
@@ -447,7 +487,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Peak Hours Heatmap */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
           <h3 className="text-lg font-semibold mb-4">Peak Hours Heatmap</h3>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
@@ -465,15 +505,236 @@ export default function AdminDashboardPage() {
                     <td className="p-2 text-sm text-gray-700 border font-medium">{hour}:00</td>
                     {[1, 2, 3, 4, 5, 6, 7].map((day) => {
                       const count = peakHoursHeatmap[day]?.[hour] || 0;
-                      const intensity = count > 0 ? Math.min(count * 20, 100) : 0;
-                      const bgColor = intensity > 0 
-                        ? `rgba(59, 130, 246, ${intensity / 100})`
-                        : 'transparent';
+                      const intensity = count > 0 ? Math.min(Math.floor(count * 20), 100) : 0;
+                      const intensityClass = intensity > 0 ? `heatmap-intensity-${intensity}` : '';
                       return (
                         <td
                           key={day}
-                          className="p-2 text-sm text-center border"
-                          style={{ backgroundColor: bgColor }}
+                          className={`p-2 text-sm text-center border ${intensityClass}`}
+                        >
+                          {count > 0 && <span className="font-medium">{count}</span>}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Advanced Customer Insights Section */}
+        {customerInsights && (
+          <>
+            {/* Customer Segmentation */}
+            <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+              <h3 className="text-lg font-semibold mb-4">Customer Segmentation (RFM Analysis)</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+                {customerInsights.segmentStats && Object.entries(customerInsights.segmentStats).map(([segment, stats]: [string, any]) => (
+                  <div key={segment} className="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-lg border-2 border-indigo-100 text-center">
+                    <div className="text-xs text-gray-600 mb-1">{segment}</div>
+                    <div className="text-2xl font-bold text-indigo-700">{stats.count}</div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      <DirhamAmount amount={stats.totalRevenue} size="xs" className="text-gray-600" />
+                    </div>
+                    <div className="text-xs text-gray-500">Avg: {stats.avgFrequency.toFixed(1)} orders</div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-gray-50">
+                      <th className="p-3 text-left border">Customer</th>
+                      <th className="p-3 text-left border">Segment</th>
+                      <th className="p-3 text-right border">Recency (days)</th>
+                      <th className="p-3 text-right border">Frequency</th>
+                      <th className="p-3 text-right border">Monetary</th>
+                      <th className="p-3 text-right border">Avg Order</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {customerInsights.rfmAnalysis?.slice(0, 15).map((customer: any) => (
+                      <tr key={customer._id} className="hover:bg-gray-50">
+                        <td className="p-3 border">
+                          <div className="font-medium">{customer.name || 'Guest'}</div>
+                          <div className="text-xs text-gray-500">{customer._id}</div>
+                        </td>
+                        <td className="p-3 border">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            customer.segment === 'VIP' ? 'bg-purple-100 text-purple-700' :
+                            customer.segment === 'Loyal' ? 'bg-blue-100 text-blue-700' :
+                            customer.segment === 'Regular' ? 'bg-green-100 text-green-700' :
+                            customer.segment === 'New' ? 'bg-yellow-100 text-yellow-700' :
+                            customer.segment === 'At Risk' ? 'bg-red-100 text-red-700' :
+                            'bg-gray-100 text-gray-700'
+                          }`}>
+                            {customer.segment}
+                          </span>
+                        </td>
+                        <td className="p-3 border text-right">{customer.recency.toFixed(0)}</td>
+                        <td className="p-3 border text-right">{customer.frequency}</td>
+                        <td className="p-3 border text-right">
+                          <DirhamAmount amount={customer.monetary} size="sm" />
+                        </td>
+                        <td className="p-3 border text-right">
+                          <DirhamAmount amount={customer.avgOrderValue} size="sm" />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Order Amount Analysis */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              {/* High Value Orders */}
+              <div className="bg-white rounded-xl shadow-sm p-6">
+                <h3 className="text-lg font-semibold mb-4">High Value Orders (Top 10)</h3>
+                <div className="space-y-3 max-h-[500px] overflow-y-auto">
+                  {customerInsights.highValueOrders?.map((order: any, index: number) => (
+                    <div key={order._id} className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                      <div className="flex items-center gap-3">
+                        <span className="flex items-center justify-center w-8 h-8 bg-emerald-600 text-white rounded-full font-bold text-sm">
+                          {index + 1}
+                        </span>
+                        <div>
+                          <p className="font-medium text-gray-900">#{order.orderNumber}</p>
+                          <p className="text-sm text-gray-600">{order.customer.name || 'Guest'}</p>
+                          <p className="text-xs text-gray-500">{order.customer.phone}</p>
+                          <p className="text-xs text-gray-400">{new Date(order.createdAt).toLocaleString()}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <DirhamAmount amount={order.totals.total} size="base" bold className="text-emerald-700" />
+                        <p className="text-xs text-gray-500 mt-1">{order.items.length} items</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Low Value Orders */}
+              <div className="bg-white rounded-xl shadow-sm p-6">
+                <h3 className="text-lg font-semibold mb-4">Low Value Orders (Bottom 10)</h3>
+                <div className="space-y-3 max-h-[500px] overflow-y-auto">
+                  {customerInsights.lowValueOrders?.map((order: any, index: number) => (
+                    <div key={order._id} className="flex items-center justify-between p-3 bg-amber-50 rounded-lg border border-amber-200">
+                      <div className="flex items-center gap-3">
+                        <span className="flex items-center justify-center w-8 h-8 bg-amber-600 text-white rounded-full font-bold text-sm">
+                          {index + 1}
+                        </span>
+                        <div>
+                          <p className="font-medium text-gray-900">#{order.orderNumber}</p>
+                          <p className="text-sm text-gray-600">{order.customer.name || 'Guest'}</p>
+                          <p className="text-xs text-gray-500">{order.customer.phone}</p>
+                          <p className="text-xs text-gray-400">{new Date(order.createdAt).toLocaleString()}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <DirhamAmount amount={order.totals.total} size="base" bold className="text-amber-700" />
+                        <p className="text-xs text-gray-500 mt-1">{order.items.length} items</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Order Statistics */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              {/* Order Amount Distribution */}
+              <div className="bg-white rounded-xl shadow-sm p-6">
+                <h3 className="text-lg font-semibold mb-4">Order Amount Statistics</h3>
+                {customerInsights.orderAmountDistribution && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                      <p className="text-sm text-gray-600 mb-1">Average Order</p>
+                      <DirhamAmount amount={customerInsights.orderAmountDistribution.avgOrder || 0} size="lg" bold className="text-blue-700" />
+                    </div>
+                    <div className="bg-green-50 p-4 rounded-lg border border-green-100">
+                      <p className="text-sm text-gray-600 mb-1">Highest Order</p>
+                      <DirhamAmount amount={customerInsights.orderAmountDistribution.maxOrder || 0} size="lg" bold className="text-green-700" />
+                    </div>
+                    <div className="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                      <p className="text-sm text-gray-600 mb-1">Lowest Order</p>
+                      <DirhamAmount amount={customerInsights.orderAmountDistribution.minOrder || 0} size="lg" bold className="text-orange-700" />
+                    </div>
+                    <div className="bg-purple-50 p-4 rounded-lg border border-purple-100">
+                      <p className="text-sm text-gray-600 mb-1">Total Orders</p>
+                      <p className="text-2xl font-bold text-purple-700">{customerInsights.orderAmountDistribution.totalOrders || 0}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Order Frequency Distribution */}
+              <div className="bg-white rounded-xl shadow-sm p-6">
+                <h3 className="text-lg font-semibold mb-4">Order Frequency Distribution</h3>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={customerInsights.orderFrequency || []}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="_id" label={{ value: 'Orders per Customer', position: 'insideBottom', offset: -5 }} />
+                    <YAxis label={{ value: 'Number of Customers', angle: -90, position: 'insideLeft' }} />
+                    <Tooltip />
+                    <Bar dataKey="customerCount" fill="#8B5CF6" name="Customers" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Customer Lifetime Value */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h3 className="text-lg font-semibold mb-4">Customer Lifetime Value (Top 10)</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                {customerInsights.lifetimeValue?.map((customer: any, index: number) => (
+                  <div key={customer._id} className="bg-gradient-to-br from-pink-50 to-white p-4 rounded-lg border-2 border-pink-100">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="flex items-center justify-center w-6 h-6 bg-pink-600 text-white rounded-full font-bold text-xs">
+                        {index + 1}
+                      </span>
+                      <p className="font-medium text-sm truncate">{customer.name || 'Guest'}</p>
+                    </div>
+                    <p className="text-xs text-gray-500 mb-2">{customer._id}</p>
+                    <DirhamAmount amount={customer.totalSpent} size="base" bold className="text-pink-700 mb-1" />
+                    <div className="text-xs text-gray-600 mt-2 space-y-1">
+                      <p>{customer.orderCount} orders</p>
+                      <p>{customer.customerAge.toFixed(0)} days as customer</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Original Peak Hours Heatmap (kept for backward compatibility) */}
+        <div className="bg-white rounded-xl shadow-sm p-6 hidden">
+          <h3 className="text-lg font-semibold mb-4">Peak Hours Heatmap</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  <th className="p-2 text-sm font-medium text-gray-700 border">Hour</th>
+                  {dayNames.map((day, index) => (
+                    <th key={index} className="p-2 text-sm font-medium text-gray-700 border">{day}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: 24 }, (_, hour) => (
+                  <tr key={hour}>
+                    <td className="p-2 text-sm text-gray-700 border font-medium">{hour}:00</td>
+                    {[1, 2, 3, 4, 5, 6, 7].map((day) => {
+                      const count = peakHoursHeatmap[day]?.[hour] || 0;
+                      const intensity = count > 0 ? Math.min(Math.floor(count * 20), 100) : 0;
+                      const intensityClass = intensity > 0 ? `heatmap-intensity-${intensity}` : '';
+                      return (
+                        <td
+                          key={day}
+                          className={`p-2 text-sm text-center border ${intensityClass}`}
                         >
                           {count > 0 && <span className="font-medium">{count}</span>}
                         </td>

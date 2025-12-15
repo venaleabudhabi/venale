@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDebounce } from '@/lib/hooks';
 
 interface SearchBarProps {
@@ -13,7 +13,7 @@ export default function SearchBar({ onSearch, placeholder = 'Search...', classNa
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 300);
 
-  useState(() => {
+  useEffect(() => {
     if (debouncedQuery) {
       onSearch(debouncedQuery);
     }

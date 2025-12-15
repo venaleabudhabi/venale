@@ -339,7 +339,7 @@ export default function MenuManagementPage() {
                   <p className="text-gray-500 text-center py-8">No items in this category</p>
                 ) : (
                   <div className="space-y-4">
-                    {items?.map((item) => (
+                    {items?.map((item: MenuItem) => (
                       <div key={item._id} className="border border-gray-200 rounded-lg p-4">
                         <div className="flex justify-between items-start">
                           <div className="flex-1">

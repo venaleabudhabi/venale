@@ -176,7 +176,7 @@ export default function MenuManagementPage() {
       setEditingCategory(category);
       setCategoryForm({
         key: category.key,
-        name_en: category.name_en,
+        name_en: category.name_en || '',
         name_ar: category.name_ar || '',
         sortOrder: category.sortOrder || 0,
         imageUrl: category.imageUrl,

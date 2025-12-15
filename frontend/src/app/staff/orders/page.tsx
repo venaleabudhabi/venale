@@ -177,7 +177,7 @@ export default function StaffOrdersPage() {
             >
               {lang === 'ar' ? 'الكل' : 'All'}
             </button>
-            {(['PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'OUT_FOR_DELIVERY'] as OrderStatus[]).map((status) => (
+            {(['PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'OUT_FOR_DELIVERY', 'COMPLETED', 'CANCELLED'] as OrderStatus[]).map((status) => (
               <button
                 key={status}
                 onClick={() => setFilterStatus(status)}

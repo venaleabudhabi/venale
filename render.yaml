@@ -18,7 +18,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_URL
-        value: https://revive-frontend.onrender.com
+        value: https://venalexrevive.onrender.com
     healthCheckPath: /api/health
 
   # Frontend Service

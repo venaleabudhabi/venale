@@ -5,6 +5,7 @@ export const api = axios.create({
 });
 
 export interface MenuItem {
+  _id?: string;
   key: string;
   name: string;
   price: number;
@@ -22,6 +23,7 @@ export interface MenuItem {
 }
 
 export interface MenuCategory {
+  _id?: string;
   key: string;
   name: string;
   imageUrl?: string;

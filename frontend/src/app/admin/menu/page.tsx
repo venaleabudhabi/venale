@@ -7,6 +7,7 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import CloudinaryUploadButton from '@/components/CloudinaryUploadButton';
 import { formatCurrency } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import DirhamAmount from '@/components/DirhamAmount';
 
 interface CategoryFormData {

@@ -258,7 +258,7 @@ export default function MenuManagementPage() {
                 {categories?.map((category: MenuCategory) => (
                   <div
                     key={category._id}
-                    onClick={() => setSelectedCategory(category._id || null)}
+                    onClick={() => setSelectedCategory(category._id)}
                     className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
                       selectedCategory === category._id ? 'bg-primary-50 border-l-4 border-primary-600' : ''
                     }`}
@@ -291,7 +291,7 @@ export default function MenuManagementPage() {
                           onClick={(e) => {
                             e.stopPropagation();
                             if (confirm('Delete this category?')) {
-                              deleteCategory.mutate(category._id!);
+                              deleteCategory.mutate(category._id);
                             }
                           }}
                           className="text-red-600 hover:text-red-700"
@@ -381,7 +381,7 @@ export default function MenuManagementPage() {
                             <button
                               onClick={() => {
                                 if (confirm('Delete this item?')) {
-                                  deleteItem.mutate(item._id!);
+                                  deleteItem.mutate(item._id);
                                 }
                               }}
                               className="text-red-600 hover:text-red-700"

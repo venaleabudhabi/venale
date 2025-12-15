@@ -5,7 +5,7 @@ export const api = axios.create({
 });
 
 export interface MenuItem {
-  _id?: string;
+  _id: string;
   key: string;
   name: string;
   name_en?: string;
@@ -27,7 +27,7 @@ export interface MenuItem {
 }
 
 export interface MenuCategory {
-  _id?: string;
+  _id: string;
   key: string;
   name: string;
   name_en?: string;

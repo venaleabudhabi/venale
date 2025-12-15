@@ -291,7 +291,7 @@ export default function MenuManagementPage() {
                           onClick={(e) => {
                             e.stopPropagation();
                             if (confirm('Delete this category?')) {
-                              deleteCategory.mutate(category._id);
+                              deleteCategory.mutate(category._id!);
                             }
                           }}
                           className="text-red-600 hover:text-red-700"
@@ -381,7 +381,7 @@ export default function MenuManagementPage() {
                             <button
                               onClick={() => {
                                 if (confirm('Delete this item?')) {
-                                  deleteItem.mutate(item._id);
+                                  deleteItem.mutate(item._id!);
                                 }
                               }}
                               className="text-red-600 hover:text-red-700"

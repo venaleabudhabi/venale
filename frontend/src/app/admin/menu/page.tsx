@@ -258,7 +258,7 @@ export default function MenuManagementPage() {
                 {categories?.map((category: MenuCategory) => (
                   <div
                     key={category._id}
-                    onClick={() => setSelectedCategory(category._id)}
+                    onClick={() => setSelectedCategory(category._id || null)}
                     className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
                       selectedCategory === category._id ? 'bg-primary-50 border-l-4 border-primary-600' : ''
                     }`}

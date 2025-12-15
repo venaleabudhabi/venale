@@ -73,6 +73,17 @@ export default function CheckoutPage({ params }: { params: { venueSlug: string }
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.replace(/\D/g, ''); // Remove non-digits
     
+    // If empty, allow typing
+    if (input.length === 0) {
+      setPhone('');
+      return;
+    }
+    
+    // First digit must be 0 or 5
+    if (input[0] !== '0' && input[0] !== '5') {
+      return; // Block typing if first digit is not 0 or 5
+    }
+    
     // Limit to 10 digits max
     if (input.length <= 10) {
       setPhone(input);

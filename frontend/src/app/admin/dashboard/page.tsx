@@ -354,7 +354,7 @@ export default function AdminDashboardPage() {
                   cx="50%"
                   cy="50%"
                   outerRadius={100}
-                  label={(entry) => `${entry._id}: ${entry.count}`}
+                  label={(entry: any) => `${entry._id}: ${entry.count}`}
                 >
                   {(paymentMethods?.paymentMethods || []).map((_: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

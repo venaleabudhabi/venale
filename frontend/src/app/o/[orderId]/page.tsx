@@ -14,7 +14,14 @@ export default function OrderTrackingPage({ params }: { params: { orderId: strin
   const { data, refetch, isFetching } = useQuery({
     queryKey: ['order', params.orderId],
     queryFn: () => orderApi.getOrder(params.orderId).then((res) => res.data),
-    refetchInterval: 5000, // Poll every 5 seconds for faster updates
+    refetchInterval: (query) => {
+      // Fast polling for active orders, slow for completed/cancelled
+      const status = query.state.data?.currentStatus;
+      if (status === 'COMPLETED' || status === 'CANCELLED') {
+        return false; // Stop polling
+      }
+      return 2000; // Poll every 2 seconds for instant updates
+    },
   });
 
   const statusSteps = [

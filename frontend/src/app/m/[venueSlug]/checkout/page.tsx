@@ -70,11 +70,39 @@ export default function CheckoutPage({ params }: { params: { venueSlug: string }
     toast.error(error);
   };
 
+  const formatPhoneNumber = (phoneInput: string): string => {
+    // Remove all non-digit characters
+    const digits = phoneInput.replace(/\D/g, '');
+    
+    // Handle different formats:
+    // 05XXXXXXXX -> +9715XXXXXXXX
+    // 5XXXXXXXX -> +9715XXXXXXXX
+    // 9715XXXXXXXX -> +9715XXXXXXXX
+    if (digits.startsWith('05')) {
+      return '+971' + digits.substring(1);
+    } else if (digits.startsWith('5') && digits.length === 9) {
+      return '+971' + digits;
+    } else if (digits.startsWith('971')) {
+      return '+' + digits;
+    }
+    return phoneInput;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!phone.match(/^\+971[0-9]{9}$/)) {
-      toast.error('Please enter a valid UAE phone number (+971XXXXXXXXX)');
+    // Validate name is required
+    if (!name || name.trim().length === 0) {
+      toast.error(lang === 'ar' ? 'الرجاء إدخال الاسم' : 'Please enter your name');
+      return;
+    }
+
+    // Format phone number automatically
+    const formattedPhone = formatPhoneNumber(phone);
+    
+    // Validate formatted phone
+    if (!formattedPhone.match(/^\+971[0-9]{9}$/)) {
+      toast.error(lang === 'ar' ? 'الرجاء إدخال رقم هاتف صحيح' : 'Please enter a valid UAE phone number');
       return;
     }
 
@@ -87,8 +115,8 @@ export default function CheckoutPage({ params }: { params: { venueSlug: string }
       venueSlug: params.venueSlug,
       channel: 'WEB',
       customer: {
-        name: name || undefined,
-        phone,
+        name: name.trim(),
+        phone: formattedPhone,
       },
       fulfillment: {
         type: fulfillmentType,
@@ -147,12 +175,16 @@ export default function CheckoutPage({ params }: { params: { venueSlug: string }
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">{t('name')}</label>
+              <label className="block text-sm font-medium mb-2">
+                {t('name')} <span className="text-red-500">*</span>
+              </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="input-field"
+                placeholder={lang === 'ar' ? 'الاسم الكامل' : 'Full Name'}
+                required
               />
             </div>
           </div>

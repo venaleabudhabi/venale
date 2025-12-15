@@ -30,6 +30,24 @@ app.use('/api/payments/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'REVIVE Refuel API',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      menu: '/api/menu',
+      orders: '/api/orders',
+      payments: '/api/payments',
+      auth: '/api/auth',
+      admin: '/api/admin',
+      driver: '/api/driver'
+    }
+  });
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

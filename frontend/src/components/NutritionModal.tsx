@@ -56,7 +56,7 @@ export default function NutritionModal({ item, isOpen, onClose }: NutritionModal
 
           <div className="p-6 space-y-6">
             <div>
-              <h3 className="font-semibold text-lg mb-4 text-gray-800">{lang === 'ar' ? 'المغذيات الكبرى' : 'Macronutrients'}</h3>
+              <h3 className="font-semibold text-lg mb-4 text-gray-800">{lang === 'ar' ? 'الحقائق الغذائية' : 'Nutrition Facts'}</h3>
               <div className="space-y-3">
                 {macros.map((macro) => (
                   <div key={macro.label}>

@@ -28,7 +28,7 @@ export default function SettingsPage() {
 
   const { data: settings, isLoading } = useQuery({
     queryKey: ['admin', 'settings'],
-    queryFn: adminApi.getVenueSettings,
+    queryFn: () => adminApi.getVenueSettings().then(res => res.data),
   });
 
   const { register, handleSubmit, reset } = useForm<VenueSettings>();

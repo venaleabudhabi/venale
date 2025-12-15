@@ -60,6 +60,30 @@ router.post('/', validate(createOrderSchema), async (req, res) => {
       return res.status(404).json({ error: 'Venue not found' });
     }
 
+    // Check if shop is open
+    if (!venue.isOpen) {
+      return res.status(400).json({ error: 'Shop is currently closed. Orders cannot be placed at this time.' });
+    }
+
+    // Check operating hours
+    const now = new Date();
+    const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const currentDay = dayNames[now.getDay()] as keyof typeof venue.operatingHours;
+    const todayHours = venue.operatingHours[currentDay];
+
+    if (todayHours.closed) {
+      return res.status(400).json({ error: `Shop is closed on ${currentDay}s. Please try another day.` });
+    }
+
+    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    const isWithinHours = currentTime >= todayHours.open && currentTime <= todayHours.close;
+
+    if (!isWithinHours) {
+      return res.status(400).json({ 
+        error: `Shop is currently closed. Operating hours: ${todayHours.open} - ${todayHours.close}` 
+      });
+    }
+
     // Validate delivery
     if (fulfillment.type === 'DELIVERY' && !venue.delivery_enabled) {
       return res.status(400).json({ error: 'Delivery not available' });

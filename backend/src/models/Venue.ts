@@ -16,6 +16,16 @@ export interface IVenue extends Document {
   member_discount_note_ar: string;
   loyalty_note_en: string;
   loyalty_note_ar: string;
+  isOpen: boolean;
+  operatingHours: {
+    monday: { open: string; close: string; closed: boolean };
+    tuesday: { open: string; close: string; closed: boolean };
+    wednesday: { open: string; close: string; closed: boolean };
+    thursday: { open: string; close: string; closed: boolean };
+    friday: { open: string; close: string; closed: boolean };
+    saturday: { open: string; close: string; closed: boolean };
+    sunday: { open: string; close: string; closed: boolean };
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,6 +47,27 @@ const venueSchema = new Schema<IVenue>(
     member_discount_note_ar: { type: String, default: '' },
     loyalty_note_en: { type: String, default: '' },
     loyalty_note_ar: { type: String, default: '' },
+    isOpen: { type: Boolean, default: true },
+    operatingHours: {
+      type: {
+        monday: { open: { type: String, default: '09:00' }, close: { type: String, default: '22:00' }, closed: { type: Boolean, default: false } },
+        tuesday: { open: { type: String, default: '09:00' }, close: { type: String, default: '22:00' }, closed: { type: Boolean, default: false } },
+        wednesday: { open: { type: String, default: '09:00' }, close: { type: String, default: '22:00' }, closed: { type: Boolean, default: false } },
+        thursday: { open: { type: String, default: '09:00' }, close: { type: String, default: '22:00' }, closed: { type: Boolean, default: false } },
+        friday: { open: { type: String, default: '09:00' }, close: { type: String, default: '22:00' }, closed: { type: Boolean, default: false } },
+        saturday: { open: { type: String, default: '09:00' }, close: { type: String, default: '22:00' }, closed: { type: Boolean, default: false } },
+        sunday: { open: { type: String, default: '09:00' }, close: { type: String, default: '22:00' }, closed: { type: Boolean, default: false } }
+      },
+      default: {
+        monday: { open: '09:00', close: '22:00', closed: false },
+        tuesday: { open: '09:00', close: '22:00', closed: false },
+        wednesday: { open: '09:00', close: '22:00', closed: false },
+        thursday: { open: '09:00', close: '22:00', closed: false },
+        friday: { open: '09:00', close: '22:00', closed: false },
+        saturday: { open: '09:00', close: '22:00', closed: false },
+        sunday: { open: '09:00', close: '22:00', closed: false }
+      }
+    }
   },
   { timestamps: true }
 );

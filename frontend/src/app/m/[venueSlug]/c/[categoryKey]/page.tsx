@@ -63,20 +63,24 @@ export default function CategoryPage({ params }: { params: { venueSlug: string; 
         <div className="bg-white px-4 py-3 overflow-x-auto">
           <div className="flex gap-2">
             <button
+              type="button"
               onClick={() => setSelectedFilter(null)}
               className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${
                 !selectedFilter ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700'
               }`}
+              aria-label="Show all items"
             >
               All
             </button>
             {allTags.map((tag) => (
               <button
+                type="button"
                 key={tag}
                 onClick={() => setSelectedFilter(tag)}
                 className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${
                   selectedFilter === tag ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700'
                 }`}
+                aria-label={`Filter by ${tag}`}
               >
                 {tag.replace(/-/g, ' ')}
               </button>
@@ -115,8 +119,10 @@ export default function CategoryPage({ params }: { params: { venueSlug: string; 
                 <div className="flex items-center justify-between mt-3">
                   <DirhamAmount amount={item.price} size="lg" bold className="text-primary-600" />
                   <button
+                    type="button"
                     onClick={() => handleAddToCart(item)}
                     className="bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-700 active:scale-95 transition-all"
+                    aria-label={`Add ${item.name} to cart`}
                   >
                     Add
                   </button>
@@ -146,6 +152,7 @@ export default function CategoryPage({ params }: { params: { venueSlug: string; 
                     )}
                   </div>
                   <button
+                    type="button"
                     onClick={() => setSelectedNutrition(item)}
                     className="text-primary-600 hover:text-primary-700 font-semibold hover:underline transition-colors"
                   >

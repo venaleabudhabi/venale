@@ -230,6 +230,9 @@ export default function AdminDashboardPage() {
             <Link href="/admin/menu" className="text-sm text-gray-600 hover:text-gray-900">
               Menu
             </Link>
+            <Link href="/admin/settings" className="text-sm text-gray-600 hover:text-gray-900">
+              Settings
+            </Link>
             <button
               onClick={() => {
                 localStorage.removeItem('token');

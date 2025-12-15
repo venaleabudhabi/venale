@@ -40,6 +40,7 @@ export default function MenuPage({ params }: { params: { venueSlug: string } }) 
             {error instanceof Error ? error.message : 'Please check your connection and try again'}
           </p>
           <button
+            type="button"
             onClick={() => refetch()}
             className="bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors"
           >
@@ -64,22 +65,26 @@ export default function MenuPage({ params }: { params: { venueSlug: string } }) 
             </div>
             <div className="flex gap-2">
               <button
+                type="button"
                 onClick={() => setLang('en')}
                 className={`px-4 py-2 rounded-lg font-medium transition-all ${
                   lang === 'en'
                     ? 'bg-primary-600 text-white shadow-md'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
+                aria-label="Switch to English"
               >
                 EN
               </button>
               <button
+                type="button"
                 onClick={() => setLang('ar')}
                 className={`px-4 py-2 rounded-lg font-medium transition-all ${
                   lang === 'ar'
                     ? 'bg-primary-600 text-white shadow-md'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
+                aria-label="Switch to Arabic"
               >
                 عربي
               </button>

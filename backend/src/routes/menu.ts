@@ -6,6 +6,56 @@ import AddonGroup from '../models/AddonGroup';
 
 const router = express.Router();
 
+// GET /api/menu/:venueSlug/status - Get venue open/closed status
+router.get('/:venueSlug/status', async (req, res) => {
+  try {
+    const { venueSlug } = req.params;
+    const venue = await Venue.findOne({ slug: venueSlug });
+    
+    if (!venue) {
+      return res.status(404).json({ error: 'Venue not found' });
+    }
+
+    // Check if shop is manually closed
+    if (!venue.isOpen) {
+      return res.json({ 
+        isOpen: false, 
+        message: 'Shop is currently closed',
+        operatingHours: venue.operatingHours
+      });
+    }
+
+    // Check operating hours for current day
+    const now = new Date();
+    const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const currentDay = dayNames[now.getDay()] as keyof typeof venue.operatingHours;
+    const todayHours = venue.operatingHours[currentDay];
+
+    if (todayHours.closed) {
+      return res.json({ 
+        isOpen: false, 
+        message: `Shop is closed on ${currentDay}s`,
+        operatingHours: venue.operatingHours
+      });
+    }
+
+    // Check current time against operating hours
+    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    const isWithinHours = currentTime >= todayHours.open && currentTime <= todayHours.close;
+
+    res.json({ 
+      isOpen: isWithinHours, 
+      message: isWithinHours ? 'Shop is open' : `Shop opens at ${todayHours.open}`,
+      operatingHours: venue.operatingHours,
+      currentDay,
+      todayHours
+    });
+  } catch (error) {
+    console.error('Shop status check error:', error);
+    res.status(500).json({ error: 'Failed to check shop status' });
+  }
+});
+
 // GET /api/menu/:venueSlug - Get full menu
 router.get('/:venueSlug', async (req, res) => {
   try {

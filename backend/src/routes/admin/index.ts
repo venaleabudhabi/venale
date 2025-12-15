@@ -8,6 +8,7 @@ import Venue from '../../models/Venue';
 import { authenticate, authorize, AuthRequest } from '../../middleware/auth';
 import { validate } from '../../middleware/validate';
 import analyticsRouter from './analytics';
+import settingsRouter from './settings';
 
 const router = express.Router();
 
@@ -17,6 +18,9 @@ router.use(authorize('admin', 'manager'));
 
 // Analytics routes
 router.use('/analytics', analyticsRouter);
+
+// Settings routes
+router.use('/settings', settingsRouter);
 
 // ===== CATEGORIES =====
 

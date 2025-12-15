@@ -40,11 +40,7 @@ export default function GooglePayButton({ orderId, amount, onSuccess, onError }:
     <button
       onClick={handleGooglePay}
       disabled={isProcessing}
-      className="w-full bg-white border-2 border-gray-300 text-gray-800 rounded-lg px-6 py-4 font-medium flex items-center justify-center gap-3 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-      style={{ 
-        fontSize: '17px',
-        fontFamily: 'Google Sans, Roboto, Arial, sans-serif'
-      }}
+      className="google-pay-button w-full bg-white border-2 border-gray-300 text-gray-800 rounded-lg px-6 py-4 font-medium flex items-center justify-center gap-3 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
     >
       {isProcessing ? (
         <div className="flex items-center gap-3">

@@ -49,6 +49,11 @@
     @apply inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full;
   }
 
+  .google-pay-button {
+    font-size: 17px;
+    font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+  }
+
   .section-title {
     @apply text-2xl font-bold text-gray-900 mb-6;
   }

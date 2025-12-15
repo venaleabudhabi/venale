@@ -85,7 +85,7 @@ export interface CreateOrderInput {
     lng?: number;
   };
   payment: {
-    method: 'COD' | 'CARD';
+    method: 'COD' | 'CARD' | 'APPLE_PAY' | 'GOOGLE_PAY';
   };
   items: {
     itemKey: string;

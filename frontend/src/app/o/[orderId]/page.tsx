@@ -11,10 +11,10 @@ export default function OrderTrackingPage({ params }: { params: { orderId: strin
   const { lang } = useLanguageStore();
   const { t, dir } = useTranslation(lang);
 
-  const { data, refetch } = useQuery({
+  const { data, refetch, isFetching } = useQuery({
     queryKey: ['order', params.orderId],
     queryFn: () => orderApi.getOrder(params.orderId).then((res) => res.data),
-    refetchInterval: 10000, // Poll every 10 seconds
+    refetchInterval: 5000, // Poll every 5 seconds for faster updates
   });
 
   const statusSteps = [
@@ -30,6 +30,14 @@ export default function OrderTrackingPage({ params }: { params: { orderId: strin
   return (
     <div dir={dir} className="min-h-screen bg-gray-50">
       <div className="max-w-3xl mx-auto px-4 py-8">
+        {/* Live Update Indicator */}
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <div className={`w-2 h-2 rounded-full ${isFetching ? 'bg-green-500 animate-pulse' : 'bg-green-500'}`} />
+          <span className="text-xs text-gray-600">
+            {isFetching ? (lang === 'ar' ? 'جاري التحديث...' : 'Updating...') : (lang === 'ar' ? 'مباشر' : 'Live')}
+          </span>
+        </div>
+
         {/* Success Message */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">

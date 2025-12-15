@@ -16,6 +16,7 @@
     "autoprefixer": "^10.4.16",
     "axios": "^1.6.5",
     "clsx": "^2.1.0",
+    "new-dirham-symbol": "^1.0.3",
     "next": "^14.2.35",
     "next-cloudinary": "^6.17.5",
     "next-intl": "^3.4.0",

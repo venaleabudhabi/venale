@@ -3,27 +3,28 @@ interface DirhamSymbolProps {
   className?: string;
 }
 
+// Size mapping for standard sizes
+const sizeClasses: Record<number, string> = {
+  12: 'dirham-symbol-xs',
+  14: 'dirham-symbol-sm',
+  16: 'dirham-symbol-md',
+  18: 'dirham-symbol-lg',
+  22: 'dirham-symbol-xl',
+};
+
 // UAE Dirham Symbol Component
-// Using SVG representation of the official UAE Dirham currency symbol
+// Using the official new UAE Dirham symbol font
 export function DirhamSymbol({ size = 16, className = '' }: DirhamSymbolProps) {
+  const sizeClass = sizeClasses[size] || 'dirham-symbol-md';
+  
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 100 100"
-      fill="currentColor"
-      className={className}
-      style={{ display: 'inline-block', verticalAlign: 'middle' }}
+    <span 
+      className={`dirham-symbol ${sizeClass} ${className}`}
       aria-label="AED"
     >
-      {/* UAE Dirham Symbol - Stylized representation */}
-      <path d="M20,30 L80,30 M20,45 L80,45 M20,60 L80,60 M35,20 L35,70 M65,20 L65,70 M30,75 Q35,80 50,80 Q65,80 70,75" 
-            stroke="currentColor" 
-            strokeWidth="4" 
-            fill="none" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"/>
-    </svg>
+      &#xea;
+    </span>
   );
 }
+
 

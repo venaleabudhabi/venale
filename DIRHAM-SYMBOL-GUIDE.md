@@ -2,20 +2,46 @@
 
 ## ✅ Successfully Implemented
 
-The UAE Dirham symbol (₯) has been implemented throughout the application, replacing all instances of "AED" text with the official symbol.
+The **official new UAE Dirham symbol** has been implemented throughout the application using the `new-dirham-symbol` package, replacing all instances of "AED" text with the proper symbol.
+
+## 📦 Package Used
+
+**Package**: [new-dirham-symbol](https://github.com/abdulrysrr/new-dirham-symbol)  
+**Version**: Latest  
+**Unicode**: `&#xea;` (U+00EA)  
+**Font**: UAESymbol (TTF, WOFF, WOFF2)
+
+### Installation
+```bash
+npm install new-dirham-symbol
+```
 
 ## 📦 Components Created
 
 ### 1. `DirhamSymbol` Component
 **File**: `frontend/src/components/DirhamSymbol.tsx`
 
-Simple SVG component that displays the UAE Dirham symbol.
+Font-based component displaying the official UAE Dirham symbol.
 
 ```tsx
 import { DirhamSymbol } from '@/components/DirhamSymbol';
 
 // Usage:
 <DirhamSymbol size={16} className="text-primary-600" />
+```
+
+**Implementation:**
+```tsx
+export function DirhamSymbol({ size = 16, className = '' }) {
+  return (
+    <span 
+      className={`dirham-symbol ${className}`}
+      style={{ fontSize: `${size}px` }}
+    >
+      &#xea;
+    </span>
+  );
+}
 ```
 
 ### 2. `DirhamAmount` Component  

@@ -70,6 +70,15 @@ export default function CheckoutPage({ params }: { params: { venueSlug: string }
     toast.error(error);
   };
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value.replace(/\D/g, ''); // Remove non-digits
+    
+    // Limit to 10 digits max
+    if (input.length <= 10) {
+      setPhone(input);
+    }
+  };
+
   const formatPhoneNumber = (phoneInput: string): string => {
     // Remove all non-digit characters
     const digits = phoneInput.replace(/\D/g, '');
@@ -94,6 +103,19 @@ export default function CheckoutPage({ params }: { params: { venueSlug: string }
     // Validate name is required
     if (!name || name.trim().length === 0) {
       toast.error(lang === 'ar' ? 'الرجاء إدخال الاسم' : 'Please enter your name');
+      return;
+    }
+
+    // Validate phone length: 9 digits (5XXXXXXXX) or 10 digits (05XXXXXXXX)
+    const digits = phone.replace(/\D/g, '');
+    if (digits.length !== 9 && digits.length !== 10) {
+      toast.error(lang === 'ar' ? 'الرجاء إدخال رقم هاتف صحيح (9 أو 10 أرقام)' : 'Please enter valid phone number (9 or 10 digits)');
+      return;
+    }
+
+    // Validate format: must start with 5 (9 digits) or 05 (10 digits)
+    if ((digits.length === 9 && !digits.startsWith('5')) || (digits.length === 10 && !digits.startsWith('05'))) {
+      toast.error(lang === 'ar' ? 'الرقم يجب أن يبدأ بـ 5 أو 05' : 'Phone must start with 5 or 05');
       return;
     }
 
@@ -167,12 +189,16 @@ export default function CheckoutPage({ params }: { params: { venueSlug: string }
               <label className="block text-sm font-medium mb-2">{t('phone')} *</label>
               <input
                 type="tel"
-                placeholder="+971512345678"
+                placeholder="5XXXXXXXX or 05XXXXXXXX"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={handlePhoneChange}
                 className="input-field"
+                maxLength={10}
                 required
               />
+              <p className="text-xs text-gray-500 mt-1">
+                {lang === 'ar' ? '9 أرقام (5XXXXXXXX) أو 10 أرقام (05XXXXXXXX)' : '9 digits (5XXXXXXXX) or 10 digits (05XXXXXXXX)'}
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">

@@ -44,6 +44,7 @@ router.get('/:venueSlug', async (req, res) => {
           key: item.key,
           name: lang === 'ar' && item.name_ar ? item.name_ar : item.name_en,
           price: item.price,
+          imageUrl: item.imageUrl,
           ingredients: lang === 'ar' && item.ingredients_ar?.length ? item.ingredients_ar : item.ingredients_en,
           tags: item.tags,
           addons: item.addons,

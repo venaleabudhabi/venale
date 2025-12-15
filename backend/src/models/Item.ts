@@ -7,6 +7,7 @@ export interface IItem extends Document {
   name_en: string;
   name_ar: string;
   price: number;
+  imageUrl?: string;
   ingredients_en: string[];
   ingredients_ar: string[];
   tags: string[];
@@ -34,6 +35,7 @@ const itemSchema = new Schema<IItem>(
     name_en: { type: String, required: true },
     name_ar: { type: String, default: '' },
     price: { type: Number, required: true },
+    imageUrl: { type: String },
     ingredients_en: [{ type: String }],
     ingredients_ar: [{ type: String }],
     tags: [{ type: String }],

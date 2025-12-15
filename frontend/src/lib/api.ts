@@ -11,6 +11,7 @@ export interface MenuItem {
   name_en?: string;
   name_ar?: string;
   price: number;
+  imageUrl?: string;
   ingredients: string[];
   ingredients_en?: string[];
   ingredients_ar?: string[];

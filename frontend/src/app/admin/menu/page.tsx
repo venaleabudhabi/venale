@@ -4,6 +4,7 @@ import { useEffect, useState, FormEvent } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi, MenuCategory, MenuItem } from '@/lib/api';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import CloudinaryUploadButton from '@/components/CloudinaryUploadButton';
 import { formatCurrency } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import DirhamAmount from '@/components/DirhamAmount';
@@ -21,6 +22,7 @@ interface ItemFormData {
   name_en: string;
   name_ar: string;
   price: number;
+  imageUrl?: string;
   ingredients_en: string;
   ingredients_ar: string;
   tags: string;
@@ -195,6 +197,7 @@ export default function MenuManagementPage() {
         name_en: item.name_en || '',
         name_ar: item.name_ar || '',
         price: item.price,
+        imageUrl: item.imageUrl,
         ingredients_en: item.ingredients_en?.join(', ') || '',
         ingredients_ar: item.ingredients_ar?.join(', ') || '',
         tags: item.tags?.join(', ') || '',
@@ -466,6 +469,22 @@ export default function MenuManagementPage() {
                   placeholder="0"
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Category Image
+                </label>
+                {categoryForm.imageUrl && (
+                  <div className="mb-2">
+                    <img src={categoryForm.imageUrl} alt="Category preview" className="w-32 h-32 object-cover rounded-lg" />
+                  </div>
+                )}
+                <CloudinaryUploadButton
+                  onUploadSuccess={(url) => setCategoryForm({ ...categoryForm, imageUrl: url })}
+                  onUploadError={(error) => alert(error)}
+                  folder="menu-categories"
+                  buttonText={categoryForm.imageUrl ? 'Change Image' : 'Upload Image'}
+                />
+              </div>
               <div className="flex gap-2 pt-4">
                 <button
                   type="button"
@@ -545,6 +564,22 @@ export default function MenuManagementPage() {
                   onChange={(e) => setItemForm({ ...itemForm, price: parseFloat(e.target.value) })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500"
                   placeholder="0.00"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Item Image
+                </label>
+                {itemForm.imageUrl && (
+                  <div className="mb-2">
+                    <img src={itemForm.imageUrl} alt="Item preview" className="w-32 h-32 object-cover rounded-lg" />
+                  </div>
+                )}
+                <CloudinaryUploadButton
+                  onUploadSuccess={(url) => setItemForm({ ...itemForm, imageUrl: url })}
+                  onUploadError={(error) => alert(error)}
+                  folder="menu-items"
+                  buttonText={itemForm.imageUrl ? 'Change Image' : 'Upload Image'}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">

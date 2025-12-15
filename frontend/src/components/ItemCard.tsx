@@ -18,9 +18,19 @@ export default function ItemCard({ item, currency, onAddToCart, className = '' }
     <>
       <div className={`card hover:shadow-md transition-shadow ${className}`}>
         <div className="flex gap-4">
-          {/* Image Placeholder */}
-          <div className="w-24 h-24 bg-gradient-to-br from-primary-100 to-primary-200 rounded-lg flex-shrink-0 flex items-center justify-center">
-            <span className="text-3xl">🥤</span>
+          {/* Image */}
+          <div className="w-32 h-32 bg-gradient-to-br from-primary-100 to-primary-200 rounded-lg flex-shrink-0 overflow-hidden">
+            {item.imageUrl ? (
+              <img 
+                src={item.imageUrl} 
+                alt={item.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <span className="text-4xl">🥤</span>
+              </div>
+            )}
           </div>
 
           {/* Content */}

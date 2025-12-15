@@ -18,21 +18,13 @@ const sizeClasses = {
   xl: 'text-xl',
 };
 
-const symbolSizes = {
-  xs: 12,
-  sm: 14,
-  md: 16,
-  lg: 18,
-  xl: 22,
-};
-
 export default function DirhamAmount({
   amount,
   showDecimals = true,
   size = 'md',
   bold = false,
   className = '',
-  showSymbolBefore = false,
+  showSymbolBefore = true,
   strikethrough = false,
 }: DirhamAmountProps) {
   const formatted = amount.toLocaleString('en-US', {
@@ -46,9 +38,9 @@ export default function DirhamAmount({
 
   return (
     <span className={`inline-flex items-center gap-1 ${textClasses}`}>
-      {showSymbolBefore && <DirhamSymbol size={symbolSizes[size]} />}
+      {showSymbolBefore && <DirhamSymbol />}
       <span>{formatted}</span>
-      {!showSymbolBefore && <DirhamSymbol size={symbolSizes[size]} />}
+      {!showSymbolBefore && <DirhamSymbol />}
     </span>
   );
 }

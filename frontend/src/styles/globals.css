@@ -69,15 +69,11 @@
   }
 
   /* UAE Dirham Symbol Styles */
+  /* Per UAE Central Bank regulation: symbol must match text size */
   .dirham-symbol {
     font-family: 'UAESymbol', sans-serif;
+    /* Symbol inherits font-size from parent container */
   }
-  
-  .dirham-symbol-xs { font-size: 12px; }
-  .dirham-symbol-sm { font-size: 14px; }
-  .dirham-symbol-md { font-size: 16px; }
-  .dirham-symbol-lg { font-size: 18px; }
-  .dirham-symbol-xl { font-size: 22px; }
 
   .section-title {
     @apply text-2xl font-bold text-gray-900 mb-6;

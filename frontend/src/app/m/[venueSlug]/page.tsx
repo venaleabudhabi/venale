@@ -13,9 +13,10 @@ export default function MenuPage({ params }: { params: { venueSlug: string } }) 
   const cartItems = useCartStore((state) => state.getTotalItems());
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['menu', lang],
     queryFn: () => menuApi.getMenu(lang).then((res) => res.data),
+    retry: 2,
   });
 
   if (isLoading) {
@@ -24,6 +25,26 @@ export default function MenuPage({ params }: { params: { venueSlug: string } }) 
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading menu...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
+          <div className="text-6xl mb-4">😞</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Unable to load menu</h2>
+          <p className="text-gray-600 mb-6">
+            {error instanceof Error ? error.message : 'Please check your connection and try again'}
+          </p>
+          <button
+            onClick={() => refetch()}
+            className="bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors"
+          >
+            Try Again
+          </button>
         </div>
       </div>
     );

@@ -192,7 +192,7 @@ export default function MenuManagementPage() {
       setEditingItem(item);
       setItemForm({
         key: item.key,
-        name_en: item.name_en,
+        name_en: item.name_en || '',
         name_ar: item.name_ar || '',
         price: item.price,
         ingredients_en: item.ingredients_en?.join(', ') || '',

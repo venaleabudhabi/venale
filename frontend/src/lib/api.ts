@@ -8,8 +8,12 @@ export interface MenuItem {
   _id?: string;
   key: string;
   name: string;
+  name_en?: string;
+  name_ar?: string;
   price: number;
   ingredients: string[];
+  ingredients_en?: string[];
+  ingredients_ar?: string[];
   tags: string[];
   addons?: string[];
   nutrition: {

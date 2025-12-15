@@ -255,7 +255,7 @@ export default function MenuManagementPage() {
                 </button>
               </div>
               <div className="divide-y divide-gray-200">
-                {categories?.map((category) => (
+                {categories?.map((category: MenuCategory) => (
                   <div
                     key={category._id}
                     onClick={() => setSelectedCategory(category._id)}

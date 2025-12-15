@@ -1,5 +1,6 @@
 import express from 'express';
 import { z } from 'zod';
+import mongoose from 'mongoose';
 import Venue from '../models/Venue';
 import Item from '../models/Item';
 import AddonGroup from '../models/AddonGroup';
@@ -124,28 +125,71 @@ router.post('/', validate(createOrderSchema), async (req, res) => {
       });
     }
 
-    // Generate order number
+    // Generate order number (atomic operation)
     const orderNumber = await generateOrderNumber();
 
-    // Create order
-    const order = new Order({
-      venueId: venue._id,
-      orderNumber,
-      channel,
-      customer,
-      fulfillment,
-      payment: {
-        method: payment.method,
-        status: payment.method === 'COD' ? 'PENDING' : 'PENDING',
-      },
-      items: orderItems,
-      totals,
-      isMember,
-      statusTimeline: [{ status: 'PENDING', at: new Date() }],
-      currentStatus: 'PENDING',
-    });
+    // Create order with retry logic for duplicate order numbers
+    let order;
+    let retries = 3;
+    
+    while (retries > 0) {
+      try {
+        // Use MongoDB session for transaction
+        const session = await mongoose.startSession();
+        
+        try {
+          await session.startTransaction();
 
-    await order.save();
+          order = new Order({
+            venueId: venue._id,
+            orderNumber,
+            channel,
+            customer,
+            fulfillment,
+            payment: {
+              method: payment.method,
+              status: payment.method === 'COD' ? 'PENDING' : 'PENDING',
+            },
+            items: orderItems,
+            totals,
+            isMember,
+            statusTimeline: [{ status: 'PENDING', at: new Date() }],
+            currentStatus: 'PENDING',
+          });
+
+          await order.save({ session });
+          await session.commitTransaction();
+          
+          break; // Success, exit retry loop
+        } catch (txError: any) {
+          await session.abortTransaction();
+          throw txError;
+        } finally {
+          session.endSession();
+        }
+      } catch (saveError: any) {
+        // Handle duplicate order number (race condition)
+        if (saveError.code === 11000 && saveError.keyPattern?.orderNumber) {
+          retries--;
+          if (retries === 0) {
+            throw new Error('Failed to create order after multiple attempts. Please try again.');
+          }
+          // Regenerate order number and retry
+          const newOrderNumber = await generateOrderNumber();
+          order = order || new Order();
+          order.orderNumber = newOrderNumber;
+          
+          // Wait before retry (exponential backoff)
+          await new Promise(resolve => setTimeout(resolve, 100 * (4 - retries)));
+        } else {
+          throw saveError;
+        }
+      }
+    }
+
+    if (!order) {
+      throw new Error('Failed to create order');
+    }
 
     res.status(201).json({
       orderId: order._id,

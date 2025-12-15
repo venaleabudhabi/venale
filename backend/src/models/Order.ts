@@ -141,6 +141,8 @@ const orderSchema = new Schema<IOrder>(
   { timestamps: true }
 );
 
+// Indexes for performance and uniqueness
 orderSchema.index({ createdAt: -1 });
+orderSchema.index({ orderNumber: 1 }, { unique: true }); // Prevent duplicate order numbers
 
 export default mongoose.model<IOrder>('Order', orderSchema);

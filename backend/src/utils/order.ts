@@ -1,5 +1,11 @@
 import Order from '../models/Order';
+import Counter from '../models/Counter';
 
+/**
+ * Generate unique order number with atomic counter
+ * Format: VENXREV-XXX-DDMMYYYY
+ * Thread-safe and prevents race conditions
+ */
 export const generateOrderNumber = async (): Promise<string> => {
   const date = new Date();
   
@@ -8,17 +14,25 @@ export const generateOrderNumber = async (): Promise<string> => {
     .toString()
     .padStart(2, '0')}${date.getFullYear()}`;
   
-  // Get start and end of today (midnight to midnight)
-  const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-  const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+  const counterId = `order-${dateStr}`;
   
-  // Count today's orders only (resets at midnight)
-  const count = await Order.countDocuments({
-    createdAt: { $gte: startOfDay, $lte: endOfDay },
-  });
+  // Atomic increment using findOneAndUpdate
+  // This is thread-safe and prevents race conditions
+  const counter = await Counter.findOneAndUpdate(
+    { _id: counterId },
+    { 
+      $inc: { seq: 1 },
+      $setOnInsert: { date: dateStr }
+    },
+    { 
+      upsert: true, 
+      new: true,
+      setDefaultsOnInsert: true
+    }
+  );
 
   // Format: VENXREV-001-13122025
-  const orderNum = (count + 1).toString().padStart(3, '0');
+  const orderNum = counter.seq.toString().padStart(3, '0');
   return `VENXREV-${orderNum}-${dateStr}`;
 };
 

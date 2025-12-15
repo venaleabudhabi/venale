@@ -280,7 +280,7 @@ router.get('/customers', async (req: AuthRequest, res) => {
       dateRange = getDateRange(period as string);
     }
 
-    const sortField = sort === 'spending' ? { totalSpent: -1 } : { orderCount: -1 };
+    const sortField: Record<string, 1 | -1> = sort === 'spending' ? { totalSpent: -1 } : { orderCount: -1 };
 
     const topCustomers = await Order.aggregate([
       {

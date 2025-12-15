@@ -26,6 +26,9 @@ export interface MenuCategory {
   _id?: string;
   key: string;
   name: string;
+  name_en?: string;
+  name_ar?: string;
+  sortOrder?: number;
   imageUrl?: string;
   items: MenuItem[];
 }

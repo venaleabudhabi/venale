@@ -225,6 +225,9 @@ export default function MenuManagementPage() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Menu Management</h1>
           <div className="flex gap-4">
+            <Link href="/admin/dashboard" className="text-sm text-gray-600 hover:text-gray-900">
+              Dashboard
+            </Link>
             <Link href="/admin/orders" className="text-sm text-gray-600 hover:text-gray-900">
               Orders
             </Link>

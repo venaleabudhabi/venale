@@ -67,6 +67,9 @@ export default function AdminOrdersPage() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Orders Management</h1>
           <div className="flex gap-4">
+            <Link href="/admin/dashboard" className="text-sm text-gray-600 hover:text-gray-900">
+              Dashboard
+            </Link>
             <Link href="/admin/menu" className="text-sm text-gray-600 hover:text-gray-900">
               Menu
             </Link>
@@ -117,28 +120,38 @@ export default function AdminOrdersPage() {
               </div>
               <div className="p-4 space-y-3 max-h-[calc(100vh-250px)] overflow-y-auto">
                 {orders.map((order: any) => (
-                  <div key={order._id} className="border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer">
-                    <div className="font-mono text-sm font-bold mb-1">{order.orderNumber}</div>
+                  <div 
+                    key={order._id} 
+                    className="bg-white border-2 border-gray-200 rounded-xl p-4 hover:border-primary-400 hover:shadow-lg transition-all cursor-pointer"
+                  >
                     {status === 'ALL' && (
                       <div className="mb-2">
-                        <span className={`inline-block px-2 py-1 text-xs font-semibold rounded ${
-                          order.currentStatus === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
-                          order.currentStatus === 'CONFIRMED' ? 'bg-blue-100 text-blue-800' :
-                          order.currentStatus === 'PREPARING' ? 'bg-purple-100 text-purple-800' :
-                          order.currentStatus === 'READY' ? 'bg-green-100 text-green-800' :
-                          'bg-gray-100 text-gray-800'
+                        <span className={`inline-block px-3 py-1 text-xs font-bold rounded-full ${
+                          order.currentStatus === 'PENDING' ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' :
+                          order.currentStatus === 'CONFIRMED' ? 'bg-blue-100 text-blue-800 border border-blue-300' :
+                          order.currentStatus === 'PREPARING' ? 'bg-purple-100 text-purple-800 border border-purple-300' :
+                          order.currentStatus === 'READY' ? 'bg-green-100 text-green-800 border border-green-300' :
+                          'bg-gray-100 text-gray-800 border border-gray-300'
                         }`}>
                           {order.currentStatus}
                         </span>
                       </div>
                     )}
-                    <div className="font-mono text-sm font-bold mb-1">{order.orderNumber}</div>
-                    <div className="text-sm text-gray-600">{order.customer.phone}</div>
-                    <div className="mt-2">
-                      <DirhamAmount amount={order.totals.total} size="sm" bold className="text-primary-600" />
+                    <div className="font-mono text-base font-bold text-gray-900 mb-2">{order.orderNumber}</div>
+                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      {order.customer.phone}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      {new Date(order.createdAt).toLocaleTimeString()}
+                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                      <DirhamAmount amount={order.totals.total} size="md" bold className="text-primary-600" />
+                      <div className="text-xs text-gray-500 font-medium">
+                        {new Date(order.createdAt).toLocaleTimeString('en-US', { 
+                          hour: '2-digit', 
+                          minute: '2-digit' 
+                        })}
+                      </div>
                     </div>
                   </div>
                 ))}

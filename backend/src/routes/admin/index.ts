@@ -7,12 +7,16 @@ import Order from '../../models/Order';
 import Venue from '../../models/Venue';
 import { authenticate, authorize, AuthRequest } from '../../middleware/auth';
 import { validate } from '../../middleware/validate';
+import analyticsRouter from './analytics';
 
 const router = express.Router();
 
 // Apply authentication to all admin routes
 router.use(authenticate);
 router.use(authorize('admin', 'manager'));
+
+// Analytics routes
+router.use('/analytics', analyticsRouter);
 
 // ===== CATEGORIES =====
 

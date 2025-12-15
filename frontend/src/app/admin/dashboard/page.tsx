@@ -608,7 +608,7 @@ export default function AdminDashboardPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <DirhamAmount amount={order.totals.total} size="base" bold className="text-emerald-700" />
+                        <DirhamAmount amount={order.totals.total} size="md" bold className="text-emerald-700" />
                         <p className="text-xs text-gray-500 mt-1">{order.items.length} items</p>
                       </div>
                     </div>
@@ -634,7 +634,7 @@ export default function AdminDashboardPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <DirhamAmount amount={order.totals.total} size="base" bold className="text-amber-700" />
+                        <DirhamAmount amount={order.totals.total} size="md" bold className="text-amber-700" />
                         <p className="text-xs text-gray-500 mt-1">{order.items.length} items</p>
                       </div>
                     </div>
@@ -698,7 +698,7 @@ export default function AdminDashboardPage() {
                       <p className="font-medium text-sm truncate">{customer.name || 'Guest'}</p>
                     </div>
                     <p className="text-xs text-gray-500 mb-2">{customer._id}</p>
-                    <DirhamAmount amount={customer.totalSpent} size="base" bold className="text-pink-700 mb-1" />
+                    <DirhamAmount amount={customer.totalSpent} size="md" bold className="text-pink-700 mb-1" />
                     <div className="text-xs text-gray-600 mt-2 space-y-1">
                       <p>{customer.orderCount} orders</p>
                       <p>{customer.customerAge.toFixed(0)} days as customer</p>

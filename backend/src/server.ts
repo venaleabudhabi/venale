@@ -53,6 +53,19 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Seed endpoint (for free tier users without shell access)
+app.get('/seed-database', async (req, res) => {
+  try {
+    // Run seed script
+    const { execSync } = require('child_process');
+    execSync('node dist/scripts/seed.js', { stdio: 'inherit' });
+    res.json({ success: true, message: 'Database seeded successfully' });
+  } catch (error: any) {
+    console.error('Seed error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Routes
 app.use('/api/menu', menuRoutes);
 app.use('/api/orders', orderRoutes);

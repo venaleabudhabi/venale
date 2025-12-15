@@ -64,10 +64,10 @@ export interface MenuData {
 
 export const menuApi = {
   getMenu: (lang: string = 'en') =>
-    api.get<MenuData>(`/menu/${process.env.NEXT_PUBLIC_VENUE_SLUG}`, { params: { lang } }),
+    api.get<MenuData>(`/menu/${process.env.NEXT_PUBLIC_VENUE_SLUG || 'revive-refuel-venale'}`, { params: { lang } }),
 
   searchMenu: (query: string, lang: string = 'en') =>
-    api.get(`/menu/${process.env.NEXT_PUBLIC_VENUE_SLUG}/search`, { params: { q: query, lang } }),
+    api.get(`/menu/${process.env.NEXT_PUBLIC_VENUE_SLUG || 'revive-refuel-venale'}/search`, { params: { q: query, lang } }),
 };
 
 export interface CreateOrderInput {

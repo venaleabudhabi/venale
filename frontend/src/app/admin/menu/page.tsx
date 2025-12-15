@@ -220,28 +220,26 @@ export default function MenuManagementPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-900">Menu Management</h1>
-            <div className="flex gap-4">
-              <button onClick={() => router.push('/admin/orders')} className="btn-secondary">
-                View Orders
-              </button>
-              <button
-                onClick={() => {
-                  localStorage.removeItem('token');
-                  localStorage.removeItem('adminUser');
-                  router.push('/admin/login');
-                }}
-                className="text-sm text-gray-600 hover:text-gray-900"
-              >
-                Logout
-              </button>
-            </div>
+      <header className="bg-white shadow-sm px-6 py-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">Menu Management</h1>
+          <div className="flex gap-4">
+            <Link href="/admin/orders" className="text-sm text-gray-600 hover:text-gray-900">
+              Orders
+            </Link>
+            <button
+              onClick={() => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('adminUser');
+                router.push('/admin/login');
+              }}
+              className="text-sm text-gray-600 hover:text-gray-900"
+            >
+              Logout
+            </button>
           </div>
         </div>
-      </div>
+      </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -1,0 +1,40 @@
+services:
+  # Backend API Service
+  - type: web
+    name: revive-backend
+    runtime: node
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://revive-frontend.onrender.com
+    healthCheckPath: /api/health
+
+  # Frontend Service
+  - type: web
+    name: revive-frontend
+    runtime: node
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: revive-backend
+          envVarKey: RENDER_EXTERNAL_URL

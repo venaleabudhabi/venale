@@ -40,11 +40,7 @@ export default function ApplePayButton({ orderId, amount, onSuccess, onError }: 
     <button
       onClick={handleApplePay}
       disabled={isProcessing}
-      className="w-full bg-black text-white rounded-lg px-6 py-4 font-medium flex items-center justify-center gap-3 hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      style={{ 
-        fontSize: '17px',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-      }}
+      className="apple-pay-button w-full bg-black text-white rounded-lg px-6 py-4 font-medium flex items-center justify-center gap-3 hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {isProcessing ? (
         <div className="flex items-center gap-3">

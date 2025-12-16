@@ -65,10 +65,11 @@ router.post('/', validate(createOrderSchema), async (req, res) => {
       return res.status(400).json({ error: 'Shop is currently closed. Orders cannot be placed at this time.' });
     }
 
-    // Check operating hours
+    // Check operating hours (UAE timezone - GMT+4)
     const now = new Date();
+    const uaeTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Dubai' }));
     const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    const currentDay = dayNames[now.getDay()] as keyof typeof venue.operatingHours;
+    const currentDay = dayNames[uaeTime.getDay()] as keyof typeof venue.operatingHours;
     const todayHours = venue.operatingHours[currentDay];
 
     if (todayHours.closed) {
@@ -81,7 +82,7 @@ router.post('/', validate(createOrderSchema), async (req, res) => {
       return hours * 60 + minutes;
     };
 
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const currentMinutes = uaeTime.getHours() * 60 + uaeTime.getMinutes();
     const openMinutes = timeToMinutes(todayHours.open);
     const closeMinutes = timeToMinutes(todayHours.close);
     const isWithinHours = currentMinutes >= openMinutes && currentMinutes < closeMinutes;

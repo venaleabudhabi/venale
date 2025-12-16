@@ -90,6 +90,7 @@ export default function StaffOrdersPage() {
   const queryClient = useQueryClient();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [filterStatus, setFilterStatus] = useState<OrderStatus | 'ALL'>('ALL');
+  const [showCompleted, setShowCompleted] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
 
@@ -142,6 +143,11 @@ export default function StaffOrdersPage() {
   const filteredOrders = orders?.filter(
     (order) => filterStatus === 'ALL' || order.currentStatus === filterStatus
   );
+
+  // Split into active and completed
+  const activeOrders = filteredOrders?.filter(o => o.currentStatus !== 'COMPLETED' && o.currentStatus !== 'CANCELLED') || [];
+  const completedOrders = filteredOrders?.filter(o => o.currentStatus === 'COMPLETED' || o.currentStatus === 'CANCELLED') || [];
+  const displayOrders = showCompleted ? completedOrders : activeOrders;
 
   const handleUpdateStatus = (orderId: string, status: OrderStatus) => {
     if (confirm(lang === 'ar' ? 'هل أنت متأكد من تحديث الحالة؟' : 'Are you sure you want to update the status?')) {
@@ -207,7 +213,7 @@ export default function StaffOrdersPage() {
                 {lang === 'ar' ? 'طلبات الموظفين' : 'Staff Orders'}
               </h1>
               <p className="text-sm text-gray-500 mt-1">
-                {lang === 'ar' ? `${filteredOrders?.length || 0} طلب` : `${filteredOrders?.length || 0} orders`}
+                {lang === 'ar' ? `${displayOrders?.length || 0} طلب` : `${displayOrders?.length || 0} orders`}
               </p>
             </div>
             <div className="flex gap-2 items-center">
@@ -241,40 +247,73 @@ export default function StaffOrdersPage() {
             </div>
           </div>
 
-          {/* Status Filter */}
-          <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
-            <button
-              onClick={() => setFilterStatus('ALL')}
-              className={`px-4 py-2 rounded-lg whitespace-nowrap ${
-                filterStatus === 'ALL' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700'
-              }`}
-            >
-              {lang === 'ar' ? 'الكل' : 'All'}
-            </button>
-            {(['PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'OUT_FOR_DELIVERY', 'COMPLETED', 'CANCELLED'] as OrderStatus[]).map((status) => (
+          {/* Status Filter & Active/Completed Tabs */}
+          <div className="mt-4 space-y-2">
+            {/* Active/Completed Tabs */}
+            <div className="flex gap-2">
               <button
-                key={status}
-                onClick={() => setFilterStatus(status)}
-                className={`px-4 py-2 rounded-lg whitespace-nowrap ${
-                  filterStatus === status ? 'bg-primary-600 text-white' : statusColors[status]
+                onClick={() => setShowCompleted(false)}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  !showCompleted
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                {lang === 'ar' ? statusLabels[status].ar : statusLabels[status].en}
+                {lang === 'ar' ? `نشط (${activeOrders.length})` : `Active (${activeOrders.length})`}
               </button>
-            ))}
+              <button
+                onClick={() => setShowCompleted(true)}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  showCompleted
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {lang === 'ar' ? `مكتمل (${completedOrders.length})` : `Completed (${completedOrders.length})`}
+              </button>
+            </div>
+
+            {/* Status Filter (only for active orders) */}
+            {!showCompleted && (
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                <button
+                  onClick={() => setFilterStatus('ALL')}
+                  className={`px-4 py-2 rounded-lg whitespace-nowrap ${
+                    filterStatus === 'ALL' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700'
+                  }`}
+                >
+                  {lang === 'ar' ? 'الكل' : 'All'}
+                </button>
+                {(['PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'OUT_FOR_DELIVERY'] as OrderStatus[]).map((status) => (
+                  <button
+                    key={status}
+                    onClick={() => setFilterStatus(status)}
+                    className={`px-4 py-2 rounded-lg whitespace-nowrap ${
+                      filterStatus === status ? 'bg-primary-600 text-white' : statusColors[status]
+                    }`}
+                  >
+                    {lang === 'ar' ? statusLabels[status].ar : statusLabels[status].en}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
 
       {/* Orders Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {filteredOrders && filteredOrders.length === 0 ? (
+        {displayOrders && displayOrders.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">{lang === 'ar' ? 'لا توجد طلبات' : 'No orders found'}</p>
+            <p className="text-gray-500">
+              {showCompleted 
+                ? (lang === 'ar' ? 'لا توجد طلبات مكتملة' : 'No completed orders')
+                : (lang === 'ar' ? 'لا توجد طلبات نشطة' : 'No active orders')}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredOrders?.map((order) => (
+            {displayOrders?.map((order) => (
               <div
                 key={order._id}
                 className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow cursor-pointer border-2 border-transparent hover:border-primary-200"
@@ -507,7 +546,7 @@ export default function StaffOrdersPage() {
               </div>
 
               {/* Action Buttons */}
-              {nextStatus[selectedOrder.currentStatus] && (
+              {!showCompleted && nextStatus[selectedOrder.currentStatus] && (
                 <div className="flex gap-3">
                   <button
                     onClick={() => handleUpdateStatus(selectedOrder._id, nextStatus[selectedOrder.currentStatus]!)}

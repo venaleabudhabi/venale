@@ -265,11 +265,21 @@ router.get('/:id', async (req, res) => {
 // GET /api/orders/staff/list - Get all orders for staff
 router.get('/staff/list', async (req, res) => {
   try {
+    // Get active orders + completed orders from last 7 days
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
     const orders = await Order.find({
-      currentStatus: { $nin: ['COMPLETED', 'CANCELLED'] },
+      $or: [
+        { currentStatus: { $nin: ['COMPLETED', 'CANCELLED'] } },
+        { 
+          currentStatus: { $in: ['COMPLETED', 'CANCELLED'] },
+          createdAt: { $gte: sevenDaysAgo }
+        }
+      ]
     })
       .sort({ createdAt: -1 })
-      .limit(100);
+      .limit(200);
 
     res.json(orders);
   } catch (error) {

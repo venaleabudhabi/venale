@@ -210,8 +210,19 @@ export default function StaffOrdersPage() {
                 {lang === 'ar' ? `${filteredOrders?.length || 0} طلب` : `${filteredOrders?.length || 0} orders`}
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
+              <a
+                href="/staff/install"
+                className="hidden sm:flex items-center gap-2 px-3 py-2 text-sm bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors"
+                title="Install app"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                <span className="hidden lg:inline">Install App</span>
+              </a>
               <button
+                type="button"
                 onClick={() => setLang('en')}
                 className={`px-4 py-2 rounded-lg font-medium transition-all ${
                   lang === 'en' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700'

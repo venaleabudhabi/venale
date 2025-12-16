@@ -1,16 +1,13 @@
-import { Metadata, Viewport } from 'next';
+import type { Metadata, Viewport } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Staff Orders - REVIVE',
-  description: 'Order management for REVIVE staff',
-  manifest: '/staff-manifest.json',
+  title: 'REVIVE Admin - Orders & Menu Management',
+  description: 'Restaurant management and order processing',
+  manifest: '/manifest-admin.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'REVIVE Staff',
-  },
-  other: {
-    'mobile-web-app-capable': 'yes',
+    title: 'REVIVE Admin',
   },
 };
 
@@ -19,10 +16,10 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#f97316',
+  themeColor: '#059669',
 };
 
-export default function StaffLayout({
+export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;

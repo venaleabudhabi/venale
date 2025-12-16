@@ -1,25 +1,35 @@
 {
   "name": "REVIVE Staff - Order Management",
   "short_name": "REVIVE Staff",
-  "description": "Staff order management system for REVIVE Refuel",
-  "start_url": "/staff/orders",
+  "description": "Kitchen and order processing app",
+  "start_url": "/staff/login",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#4e2430",
+  "theme_color": "#f97316",
   "orientation": "portrait",
   "scope": "/staff/",
   "icons": [
     {
-      "src": "/staff-icon-192.svg",
+      "src": "/icon-192.svg",
       "sizes": "192x192",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/staff-icon-512.svg",
+      "src": "/icon-512.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    }
+  ],
+  "categories": ["business", "productivity", "food"],
+  "shortcuts": [
+    {
+      "name": "Orders",
+      "short_name": "Orders",
+      "description": "View and process orders",
+      "url": "/staff/orders",
+      "icons": [{ "src": "/icon-192.svg", "sizes": "192x192" }]
     }
   ]
 }

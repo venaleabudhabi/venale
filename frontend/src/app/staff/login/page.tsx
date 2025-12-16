@@ -94,6 +94,18 @@ export default function StaffLoginPage() {
           <p>Default credentials:</p>
           <p className="font-mono text-xs mt-1">staff@revive.ae / Staff123!</p>
         </div>
+
+        <div className="mt-6 text-center">
+          <a
+            href="/staff/install"
+            className="inline-flex items-center gap-2 text-sm text-orange-600 hover:text-orange-700 font-medium"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            Install app on your device
+          </a>
+        </div>
       </div>
     </div>
   );

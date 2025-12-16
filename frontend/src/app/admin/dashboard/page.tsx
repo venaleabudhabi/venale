@@ -44,6 +44,12 @@ export default function AdminDashboardPage() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api'}/admin/analytics/summary?${params}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('adminUser');
+        router.push('/admin/login');
+        throw new Error('Unauthorized');
+      }
       return res.json();
     },
   });

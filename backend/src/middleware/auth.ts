@@ -30,9 +30,16 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
 
 export const authorize = (...roles: string[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction) => {
-    if (!req.user || !roles.includes(req.user.role)) {
+    if (!req.user) {
+      console.error('[Auth] No user found in request');
       return res.status(403).json({ error: 'Insufficient permissions' });
     }
+    
+    if (!roles.includes(req.user.role)) {
+      console.error(`[Auth] User ${req.user.email} has role '${req.user.role}', required: ${roles.join(', ')}`);
+      return res.status(403).json({ error: `Insufficient permissions. Required role: ${roles.join(' or ')}` });
+    }
+    
     next();
   };
 };

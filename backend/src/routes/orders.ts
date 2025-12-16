@@ -75,8 +75,16 @@ router.post('/', validate(createOrderSchema), async (req, res) => {
       return res.status(400).json({ error: `Shop is closed on ${currentDay}s. Please try another day.` });
     }
 
-    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    const isWithinHours = currentTime >= todayHours.open && currentTime <= todayHours.close;
+    // Convert time to minutes for proper comparison
+    const timeToMinutes = (time: string) => {
+      const [hours, minutes] = time.split(':').map(Number);
+      return hours * 60 + minutes;
+    };
+
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const openMinutes = timeToMinutes(todayHours.open);
+    const closeMinutes = timeToMinutes(todayHours.close);
+    const isWithinHours = currentMinutes >= openMinutes && currentMinutes < closeMinutes;
 
     if (!isWithinHours) {
       return res.status(400).json({ 

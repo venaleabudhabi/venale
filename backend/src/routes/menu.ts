@@ -40,8 +40,15 @@ router.get('/:venueSlug/status', async (req, res) => {
     }
 
     // Check current time against operating hours
-    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    const isWithinHours = currentTime >= todayHours.open && currentTime <= todayHours.close;
+    const timeToMinutes = (time: string) => {
+      const [hours, minutes] = time.split(':').map(Number);
+      return hours * 60 + minutes;
+    };
+
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const openMinutes = timeToMinutes(todayHours.open);
+    const closeMinutes = timeToMinutes(todayHours.close);
+    const isWithinHours = currentMinutes >= openMinutes && currentMinutes < closeMinutes;
 
     res.json({ 
       isOpen: isWithinHours, 

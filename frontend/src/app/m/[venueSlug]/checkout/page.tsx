@@ -139,11 +139,6 @@ export default function CheckoutPage({ params }: { params: { venueSlug: string }
       return;
     }
 
-    if (fulfillmentType === 'DELIVERY' && !address) {
-      toast.error('Please enter delivery address');
-      return;
-    }
-
     const orderData: CreateOrderInput = {
       venueSlug: params.venueSlug,
       channel: 'WEB',
@@ -153,7 +148,7 @@ export default function CheckoutPage({ params }: { params: { venueSlug: string }
       },
       fulfillment: {
         type: fulfillmentType,
-        address: fulfillmentType === 'DELIVERY' ? address : undefined,
+        address: fulfillmentType === 'DELIVERY' ? 'Revive Gym' : undefined,
         notes: notes || undefined,
       },
       payment: {

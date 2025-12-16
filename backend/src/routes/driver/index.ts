@@ -13,9 +13,19 @@ router.use(authorize('driver'));
 // GET /api/driver/orders/assigned - Get orders assigned to this driver
 router.get('/orders/assigned', async (req: AuthRequest, res) => {
   try {
+    // Show READY, OUT_FOR_DELIVERY, and recently COMPLETED orders (last 7 days)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    
     const orders = await Order.find({
       assignedDriver: req.user!._id,
-      currentStatus: { $in: ['OUT_FOR_DELIVERY'] },
+      $or: [
+        { currentStatus: { $in: ['READY', 'OUT_FOR_DELIVERY'] } },
+        { 
+          currentStatus: 'COMPLETED',
+          updatedAt: { $gte: sevenDaysAgo }
+        }
+      ]
     }).sort({ createdAt: -1 });
 
     res.json({ orders });
@@ -24,10 +34,10 @@ router.get('/orders/assigned', async (req: AuthRequest, res) => {
   }
 });
 
-// PATCH /api/driver/orders/:id/status - Update order status (driver can only mark as COMPLETED)
+// PATCH /api/driver/orders/:id/status - Update order status
 const updateStatusSchema = z.object({
   body: z.object({
-    status: z.enum(['COMPLETED']),
+    status: z.enum(['OUT_FOR_DELIVERY', 'COMPLETED']),
   }),
 });
 

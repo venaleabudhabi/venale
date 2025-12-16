@@ -30,6 +30,7 @@ export default function DriverOrdersPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showCompleted, setShowCompleted] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('driver_token');
@@ -54,6 +55,9 @@ export default function DriverOrdersPage() {
   });
 
   const orders = data?.orders || [];
+  const activeOrders = orders.filter((o: Order) => o.currentStatus !== 'COMPLETED' && o.currentStatus !== 'CANCELLED');
+  const completedOrders = orders.filter((o: Order) => o.currentStatus === 'COMPLETED' || o.currentStatus === 'CANCELLED');
+  const displayOrders = showCompleted ? completedOrders : activeOrders;
 
   const updateStatus = useMutation({
     mutationFn: async ({ orderId, status }: { orderId: string; status: string }) => {
@@ -94,18 +98,44 @@ export default function DriverOrdersPage() {
               Logout
             </button>
           </div>
+          
+          {/* Filter Tabs */}
+          <div className="flex gap-2 mt-4">
+            <button
+              onClick={() => setShowCompleted(false)}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                !showCompleted
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              Active ({activeOrders.length})
+            </button>
+            <button
+              onClick={() => setShowCompleted(true)}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                showCompleted
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              Completed ({completedOrders.length})
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Orders List */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {orders.length === 0 ? (
+        {displayOrders.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-8 text-center">
-            <p className="text-gray-500">No deliveries assigned</p>
+            <p className="text-gray-500">
+              {showCompleted ? 'No completed deliveries' : 'No active deliveries assigned'}
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
-            {orders.map((order: Order) => (
+            {displayOrders.map((order: Order) => (
               <div key={order._id} className="bg-white rounded-lg shadow p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div>
@@ -178,26 +208,28 @@ export default function DriverOrdersPage() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-3 pt-4 border-t border-gray-200">
-                  {order.currentStatus === 'READY' && (
-                    <button
-                      onClick={() => updateStatus.mutate({ orderId: order._id, status: 'OUT_FOR_DELIVERY' })}
-                      className="btn-primary flex-1"
-                      disabled={updateStatus.isPending}
-                    >
-                      Start Delivery
-                    </button>
-                  )}
-                  {order.currentStatus === 'OUT_FOR_DELIVERY' && (
-                    <button
-                      onClick={() => updateStatus.mutate({ orderId: order._id, status: 'COMPLETED' })}
-                      className="btn-primary flex-1"
-                      disabled={updateStatus.isPending}
-                    >
-                      Mark as Delivered
-                    </button>
-                  )}
-                </div>
+                {!showCompleted && (
+                  <div className="flex gap-3 pt-4 border-t border-gray-200">
+                    {order.currentStatus === 'READY' && (
+                      <button
+                        onClick={() => updateStatus.mutate({ orderId: order._id, status: 'OUT_FOR_DELIVERY' })}
+                        className="btn-primary flex-1"
+                        disabled={updateStatus.isPending}
+                      >
+                        Start Delivery
+                      </button>
+                    )}
+                    {order.currentStatus === 'OUT_FOR_DELIVERY' && (
+                      <button
+                        onClick={() => updateStatus.mutate({ orderId: order._id, status: 'COMPLETED' })}
+                        className="btn-primary flex-1"
+                        disabled={updateStatus.isPending}
+                      >
+                        Mark as Delivered
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
